@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd 
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-2.5.xsd 
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+	
+	<bean id="masterslaveTransactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="masterslaveDataSource" />
+	</bean>
+	
+	<bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean" />
+
+	<bean id="myMemCache" class="com.sogou.bizdev.compass.delayfree.cache.memcache.MyMemCache">
+		<property name="hostAndPort" value="${memcache.host_port}"></property>
+		<property name="hostWeight" value="${memcache.weights}"></property>
+		<property name="initConn" value="${memcache.init_connection}"></property>
+		<property name="minConn" value="${memcache.min_connection}"></property>
+		<property name="maxConn" value="${memcache.max_connection}"></property>
+		<property name="maxIdleTime" value="${memcache.max_idle_time}"></property>
+		<property name="maintSleepTime" value="${memcache.maint_sleep_time}"></property>
+		<property name="socketReadTimeOut" value="${memcache.socket_read_timeout}"></property>
+		<property name="socketConnectTimeOut" value="${memcache.socket_connect_timeout}"></property>
+		<property name="socketNagle" value="${memcache.socket_nagle}"></property>
+		<property name="failover" value="${memcache.failover}"></property>
+		<property name="failback" value="${memcache.failback}"></property>
+		<property name="primitiveAsString" value="${memcache.primitive_as_string}"></property>
+	</bean>
+	
+	
+	<bean id="delayFree" class="com.sogou.bizdev.compass.delayfree.MemcacheBasedDelayFree">
+		<property name="mycache" ref="myMemCache"></property>
+	</bean>
+	
+	
+	<bean id="masterslaveRoutingInterceptor" class="com.sogou.bizdev.compass.delayfree.preprocessor.DelayFreeRoutingInterceptor">
+		<property name="dataSourceId" value="masterslaveDataSource"></property>
+		<property name="masterSlaveAttributes">
+			<props>
+				<prop key="create*">MASTER</prop>
+				<prop key="build*">MASTER</prop>
+				<prop key="delete*">MASTER</prop>
+				<prop key="write*">MASTER</prop>
+				<prop key="set*">MASTER</prop>
+				<prop key="update*">MASTER</prop>
+				<!-- 只读事务 -->
+				<prop key="*">SLAVE</prop>
+			</props>
+		</property>
+		<property name="delayFree" ref="delayFree"></property>
+		<property name="useRoutingKeyAsAntiDelayKey" value="true"></property>
+	</bean>
+	
+
+	<!-- <bean id="masterslaveRoutingInterceptor" class="com.sogou.bizdev.compass.core.preprocessor.RoutingInterceptor">
+		<property name="dataSourceId" value="masterslaveDataSource"></property>
+		<property name="masterSlaveAttributes">
+			<props>
+				<prop key="create*">MASTER</prop>
+				<prop key="build*">MASTER</prop>
+				<prop key="delete*">MASTER</prop>
+				<prop key="write*">MASTER</prop>
+				<prop key="set*">MASTER</prop>
+				<prop key="update*">MASTER</prop>
+				只读事务
+				<prop key="*">SLAVE</prop>
+			</props>
+		</property>
+	</bean> -->
+	
+	<tx:advice id="masterSlaveTxAdvice" transaction-manager="masterslaveTransactionManager">
+		<tx:attributes>
+			<tx:method name="create*" propagation="REQUIRED" timeout="300" rollback-for="java.lang.Exception" />
+			<tx:method name="delete*" propagation="REQUIRED" timeout="300" rollback-for="java.lang.Exception" />
+			<tx:method name="update*" propagation="REQUIRED" timeout="300" rollback-for="java.lang.Exception" />
+			<tx:method name="add*" propagation="REQUIRED" timeout="300" rollback-for="java.lang.Exception" />
+			<tx:method name="set*" propagation="REQUIRED" timeout="300" rollback-for="java.lang.Exception" />
+			<tx:method name="save*" propagation="REQUIRED" timeout="300" rollback-for="java.lang.Exception" />
+			<tx:method name="find*" propagation="REQUIRED" read-only="true" timeout="300"/>
+			<tx:method name="get*"  propagation="REQUIRED" read-only="true" timeout="300"/>
+		    <tx:method name="build*" propagation="REQUIRED" timeout="300" rollback-for="java.lang.Exception" />
+		    <tx:method name="*" propagation="REQUIRED" read-only="true" timeout="300" />
+		</tx:attributes>
+	</tx:advice>
+	
+	<aop:config>
+		<aop:pointcut id="masterSlavePointcut"
+			expression="execution(* com.sogou..*HibernateAccountMSService*.*(..))
+                    or execution(* com.sogou..*HibernateAccountService*.*(..)) 
+                    or execution(* com.sogou..*MybatisAccountService*.*(..)) 
+                    or execution(* com.sogou..*AccountService*.*(..)) " />
+		 
+		<aop:advisor pointcut-ref="masterSlavePointcut" advice-ref="masterslaveRoutingInterceptor"  order="1"/>
+		<aop:advisor pointcut-ref="masterSlavePointcut" advice-ref="masterSlaveTxAdvice"  order="2" />
+
+	</aop:config>
+
+</beans>

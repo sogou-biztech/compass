@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<bean id="shardHibernatePlanService" class="com.sogou.bizdev.compass.sample.hibernate.shard.service.impl.ShardHibernatePlanServiceImpl">
+	  <property name="shardHibernatePlanDao" ref="shardHibernatePlanDao" />
+	</bean>
+	
+	<bean id="shardFirstService" class="com.sogou.bizdev.compass.sample.hibernate.combined.impl.ShardFirstServiceImpl">
+	  <property name="hibernateAccountService" ref="hibernateAccountService" />
+	  <property name="shardHibernatePlanService" ref="shardHibernatePlanService" />
+	</bean>
+</beans>

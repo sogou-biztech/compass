@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	
+	<bean id="masterslaveHibernateSessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="dataSource" ref="masterslaveDataSource" /><!-- 引用数据源 -->
+        <property name="configLocations">
+			<list>
+				<value>
+					classpath:/conf/hibernate/hibernate-masterslave.cfg.xml
+				</value>
+			</list>
+		</property>
+    </bean>
+	
+	
+</beans>

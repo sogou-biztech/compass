@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ds="http://www.sogou.com/schema/datasource"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.sogou.com/schema/datasource http://www.sogou.com/schema/datasource/datasource.xsd">
+
+	<!-- Shards Datasources -->
+	<bean id="default_masterslave_ds" class="org.logicalcobwebs.proxool.ProxoolDataSource"
+		abstract="true" destroy-method="close">
+		<property name="driver">
+			<value>${datasource.oracle.driverClassName}</value>
+		</property>
+		<property name="user">
+			<value>${datasource.masterslave.username}</value>
+		</property>
+		<property name="password">
+			<value>${datasource.masterslave.password}</value>
+		</property>
+		<property name="maximumConnectionCount">
+			<value>${datasource.masterslave.maxPoolSize}</value>
+		</property>
+		<property name="minimumConnectionCount">
+			<value>${datasource.masterslave.initialPoolSize}</value>
+		</property>
+		<property name="houseKeepingTestSql" >
+			<value>select CURRENT_DATE</value>
+		</property>
+	</bean>
+
+	<ds:datasource id="masterslaveDataSource"
+		datasource-prototype="default_masterslave_ds">
+			<ds:group name="masterslave">
+				<ds:master url="${datasource.masterslave}"/>
+ 				<ds:slave  url="${datasource.masterslave.s1}"/>
+ 				<ds:slave  url="${datasource.masterslave.s2}"/>
+ 			</ds:group>
+			
+
+			<!-- <ds:availabilityDetector pingStatement="select 1 from dual" /> --><!-- oracle心跳探测语句 -->
+			<!-- <ds:datasource.loadbalance loadBalanceStrategy="weightedRandom"/> --><!-- 基于权重进行负载均衡,如不设置默认权重全为1 -->
+	 </ds:datasource>
+
+</beans>

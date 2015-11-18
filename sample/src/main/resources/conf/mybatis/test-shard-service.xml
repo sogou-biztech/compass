@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<bean id="shardMybatisPlanService" class="com.sogou.bizdev.compass.sample.mybatis.shard.service.impl.ShardMybatisPlanServiceImpl">
+	  <property name="planDao" ref="shardMybatisPlanDao" />
+	</bean>
+	 
+</beans>

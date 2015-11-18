@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+          "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+  <hibernate-configuration>
+	<session-factory>
+		<property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
+		<property name="dialect">org.hibernate.dialect.Oracle9Dialect</property>
+		<property name="hibernate.show_sql">true</property>
+		<property name="hibernate.format_sql">false</property>
+		<!-- envers相关属性 ：hibernate自动记录实体修改记录的相关属性-->
+		<property name="org.hibernate.envers.audit_table_suffix">_Audit</property>
+		<property name="org.hibernate.envers.audit_table_prefix">log_</property>
+		<property name="org.hibernate.envers.revision_field_name">rev</property>
+		<property name="org.hibernate.envers.revision_type_field_name">revtype</property>
+		<property name="org.hibernate.envers.revision_on_collection_change">true</property>
+		<property name="org.hibernate.envers.do_not_audit_optimistic_locking_field">true</property>
+		<property name="org.hibernate.envers.store_data_at_delete">true</property>
+		<property name="org.hibernate.envers.default_schema"></property>
+		<property name="org.hibernate.envers.default_catalog"></property>
+		<!--property name="hibernate.hbm2ddl.auto">validate</property-->
+
+		<mapping resource="conf/hibernate/mapping/Account.hbm.xml"/>
+		
+		
+	</session-factory>
+
+</hibernate-configuration>

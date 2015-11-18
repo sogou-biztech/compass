@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+	<bean id="shardJdbcTemplate" class="com.sogou.bizdev.compass.aggregation.template.ShardJdbcTemplate">
+		<constructor-arg>
+			<ref bean="shardDataSource" />
+		</constructor-arg>
+		<property name="threadPoolSize" value="3" />	<!-- 针对每个分库查询时使用的线程池的数目 -->
+		<property name="queryTimeout" value="200" />	<!-- 查询超时时间，单位秒 -->
+		<property name="maxRows" value="1000" />		<!-- 查询时的最大结果集行数 -->
+	</bean>
+	
+	<bean id="planService" class="com.sogou.bizdev.compass.sample.aggregation.ShardJdbcTemplatePlanServiceImpl">
+		<property name="shardJdbcTemplate" ref="shardJdbcTemplate" />
+	</bean>
+	
+	<aop:config>
+		<aop:pointcut id="shardJdbcTemplatePointcut"
+			expression="execution(* com.sogou..*ShardJdbcTemplatePlanService*.*(..))" 
+		/>
+		 
+		<aop:advisor pointcut-ref="shardJdbcTemplatePointcut" advice-ref="shardRoutingInterceptor"  order="1"/>
+	</aop:config>
+	
+</beans>

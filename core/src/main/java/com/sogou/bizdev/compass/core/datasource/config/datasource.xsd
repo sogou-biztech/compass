@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="http://www.sogou.com/schema/datasource"
+	xmlns:tns="http://www.sogou.com/schema/datasource"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	elementFormDefault="qualified">
+
+	<import namespace="http://www.springframework.org/schema/beans" />
+
+	<element name="datasource">
+		<complexType>
+			<complexContent>
+				<extension base="beans:identifiedType">
+					<sequence>
+						<element name="group" type="tns:GroupType" maxOccurs="unbounded"
+							minOccurs="1"></element>
+						<element name="availabilityDetector" type="tns:AvailabilityDetectorType"
+							maxOccurs="1" minOccurs="0">
+						</element>
+						<element name="router" type="tns:DatasourceRouterType"
+							maxOccurs="1" minOccurs="0">
+  						</element>
+						<element name="loadbalance" type="tns:DatasourceLoadBalanceType"
+							maxOccurs="1" minOccurs="0">
+						</element>
+						<element name="sqlInterceptor" type="tns:DatasourceSqlInterceptorType"
+							maxOccurs="1" minOccurs="0">
+						</element>
+						<element name="pingStatement" type="tns:PingStatementType"
+							maxOccurs="1" minOccurs="0">
+						</element>
+					</sequence>
+					<attribute name="datasource-prototype" type="string" use="required">
+					</attribute>
+				</extension>
+			</complexContent>
+		</complexType>
+	</element>
+	
+	<complexType name="PingStatementType">
+		<attribute name="value" type="string"></attribute>
+	</complexType>
+
+	<complexType name="AvailabilityDetectorType">
+		<sequence>
+    		<element ref="beans:property" maxOccurs="unbounded" minOccurs="0"/>
+		</sequence>
+		<attribute name="enabled" type="string" use="optional"></attribute>
+		<attribute name="interval" type="string" use="optional"></attribute>
+		<attribute name="detectPoolSize" type="string" use="optional"></attribute>
+	</complexType>
+	
+	
+
+	<complexType name="DatasourceRouterType">
+     	<sequence>
+    		<element ref="beans:property" maxOccurs="unbounded" minOccurs="0"/>
+		</sequence>
+ 		<attribute name="class" type="string"></attribute>
+		<attribute name="ref" type="string"></attribute>
+	</complexType>
+	
+ 	<complexType name="DatasourceLoadBalanceType">
+ 		<sequence>
+    		<element ref="beans:property" maxOccurs="unbounded" minOccurs="0"/>
+		</sequence>
+		<attribute name="class" type="string"></attribute>
+		<attribute name="ref" type="string"></attribute>
+		<attribute name="loadBalanceStrategy">
+			<simpleType>
+ 				<restriction base="string">
+	    			<enumeration value="leastActive"/>
+	    			<enumeration value="weightedRandom"/>
+	    			<enumeration value="weightedRoundRobin"/>
+ 			 	</restriction>
+			</simpleType>
+		</attribute>
+		
+	</complexType>
+	
+	<complexType name="DatasourceSqlInterceptorType">
+		<sequence>
+    		<element ref="beans:property" maxOccurs="unbounded" minOccurs="0"/>
+		</sequence>
+		<attribute name="class" type="string"></attribute>
+		<attribute name="ref" type="string"></attribute>
+	</complexType>
+
+	<complexType name="GroupType">
+    	<sequence>
+    		<element name="master">
+    			<complexType>
+    				<sequence>
+    				    <element ref="beans:property" maxOccurs="unbounded" minOccurs="0"/>
+					</sequence>
+					<!-- c3p0 -->
+					<attribute name="jdbcUrl" type="string" use="optional"></attribute>
+					<attribute name="driverClass" type="string" use="optional"></attribute>
+					<attribute name="user" type="string" use="optional"></attribute>
+					<attribute name="password" type="string" use="optional"></attribute>
+					<attribute name="maxPoolSize" type="string" use="optional"></attribute>
+					<attribute name="minPoolSize" type="string" use="optional"></attribute>
+					<attribute name="initialPoolSize" type="string" use="optional"></attribute>
+					<attribute name="idleConnectionTestPeriod" type="string" use="optional"></attribute>
+					<attribute name="maxIdleTime" type="string" use="optional"></attribute>
+					<attribute name="checkoutTimeout" type="string" use="optional"></attribute>
+					
+					<!-- dbcp -->
+					<attribute name="url" type="string" use="optional"></attribute>
+					<attribute name="driverClassName" type="string" use="optional"></attribute>
+					<attribute name="username" type="string" use="optional"></attribute>
+					<attribute name="maxActive" type="string" use="optional"></attribute>
+					<attribute name="maxIdle" type="string" use="optional"></attribute>
+					<attribute name="initialSize" type="string" use="optional"></attribute>
+					<attribute name="timeBetweenEvictionRunsMillis" type="string" use="optional"></attribute>
+					<attribute name="minEvictableIdleTimeMillis" type="string" use="optional"></attribute>
+					
+					<!-- proxool 
+					<attribute name="driverUrl" type="string" use="optional"></attribute>
+					<attribute name="driver" type="string" use="optional"></attribute>
+					<attribute name="alias" type="string" use="optional"></attribute>
+					<attribute name="maximumConnectionCount" type="string" use="optional"></attribute>
+					<attribute name="prototypeCount" type="string" use="optional"></attribute>
+					<attribute name="minimumConnectionCount" type="string" use="optional"></attribute>
+					<attribute name="houseKeepingTestSql" type="string" use="optional"></attribute>-->
+    			</complexType>
+    		</element>
+    		<element name="slave" maxOccurs="unbounded" minOccurs="0">
+    			<complexType>
+    				<sequence>
+    				    <element ref="beans:property" maxOccurs="unbounded" minOccurs="0"/>
+					</sequence>
+					<attribute name="weight" type="string" use="optional"></attribute>
+					<!-- c3p0 -->
+					<attribute name="jdbcUrl" type="string" use="optional"></attribute>
+					<attribute name="user" type="string" use="optional"></attribute>
+					<attribute name="password" type="string" use="optional"></attribute>
+					<attribute name="maxPoolSize" type="string" use="optional"></attribute>
+					<attribute name="minPoolSize" type="string" use="optional"></attribute>
+					<attribute name="initialPoolSize" type="string" use="optional"></attribute>
+					<attribute name="idleConnectionTestPeriod" type="string" use="optional"></attribute>
+					<attribute name="maxIdleTime" type="string" use="optional"></attribute>
+					<attribute name="checkoutTimeout" type="string" use="optional"></attribute>
+					
+					<!-- dbcp -->
+					<attribute name="url" type="string" use="optional"></attribute>
+					<attribute name="driverClassName" type="string" use="optional"></attribute>
+					<attribute name="username" type="string" use="optional"></attribute>
+					<attribute name="maxActive" type="string" use="optional"></attribute>
+					<attribute name="maxIdle" type="string" use="optional"></attribute>
+					<attribute name="initialSize" type="string" use="optional"></attribute>
+					<attribute name="timeBetweenEvictionRunsMillis" type="string" use="optional"></attribute>
+					<attribute name="minEvictableIdleTimeMillis" type="string" use="optional"></attribute>
+					
+					<!-- proxool 
+					<attribute name="driverUrl" type="string" use="optional"></attribute>
+					<attribute name="driver" type="string" use="optional"></attribute>
+					<attribute name="alias" type="string" use="optional"></attribute>
+					<attribute name="maximumConnectionCount" type="string" use="optional"></attribute>
+					<attribute name="prototypeCount" type="string" use="optional"></attribute>
+					<attribute name="minimumConnectionCount" type="string" use="optional"></attribute>
+					<attribute name="houseKeepingTestSql" type="string" use="optional"></attribute>-->
+    			</complexType>
+    		</element>
+    	</sequence>
+    	<attribute name="name" type="string" use="required"></attribute>
+    </complexType>
+</schema>
