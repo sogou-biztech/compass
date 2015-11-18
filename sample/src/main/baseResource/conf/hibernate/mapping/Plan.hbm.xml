@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+ 
+<hibernate-mapping>
+    <class name="com.sogou.bizdev.compass.sample.common.po.Plan" table="PLAN"  dynamic-insert="true" dynamic-update="true">
+		<id name="planId" type="java.lang.Long">
+			<column name="PLANID" precision="10" scale="0" />
+			<generator class="assigned">
+			</generator>
+		</id>
+		<property name="accountId" type="java.lang.Long">
+			<column name="ACCOUNTID" precision="10" scale="0" not-null="true" />
+		</property>
+		
+		<property name="name" type="java.lang.String">
+			<column name="NAME" length="40" not-null="true" />
+		</property>
+
+		<property name="createDate" type="java.util.Date">
+			<column name="CREATEDATE" length="7" not-null="true" />
+		</property>
+	</class>
+</hibernate-mapping>

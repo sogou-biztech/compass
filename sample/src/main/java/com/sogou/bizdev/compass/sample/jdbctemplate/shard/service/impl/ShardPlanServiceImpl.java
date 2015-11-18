@@ -17,13 +17,20 @@ public class ShardPlanServiceImpl implements ShardPlanService {
 	public void setPlanDao(ShardPlanDao planDao) {
 		this.planDao = planDao;
 	}
+	
+	@Override
+	public Plan createPlans(Long accountId, Plan plan) {
+ 		return getPlanDao().createPlan(accountId,plan);
+	}
 
 	@Override
-	public List<Plan> getPlansById(Long accountId) {
-		return getPlanDao().getPlansById(accountId);
+	public List<Plan> getPlansByAccountId(Long accountId) {
+		return getPlanDao().getPlansByAccountId(accountId);
 	}
 
-	public Plan updatePlanById(Long accountId, Plan p){
-		return getPlanDao().updatePlanById(accountId, p);
+	public Plan updatePlan(Long accountId, Plan p){
+		return getPlanDao().updatePlan(accountId, p);
 	}
+
+	
 }

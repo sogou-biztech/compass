@@ -3,6 +3,7 @@ package com.sogou.bizdev.compass.sample.jdbctemplate.shard.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -24,17 +25,33 @@ public class ShardPlanDaoImpl implements ShardPlanDao {
 	}
 
 	@Override
-	public List<Plan> getPlansById(Long accountId) {
-		String sql = "select accountid, cpcplanid, name from cpcplan where accountid=?";
+	public Plan createPlan(Long accountId,Plan plan) {
+		StringBuilder sql = new StringBuilder("insert into plan(planid,accountid,name,createdate) values(?,?,?,?) ");
+		List params = new ArrayList(); 
+		params.add(plan.getPlanId());
+		params.add(plan.getAccountId());
+		params.add(plan.getName());
+		params.add(new Date()); 
+		
+		getJdbcTemplate().update(sql.toString(), params.toArray());
+		
+		return getPlanByPlanId(accountId, plan.getPlanId());
+		
+	}
+	
+	@Override
+	public List<Plan> getPlansByAccountId(Long accountId) {
+		String sql = "select accountid, planid, name,createdate from plan where accountid=?";
 		
 		List<Plan> plans = getJdbcTemplate().query(sql, new Object[]{accountId}, new RowMapper<Plan>(){
 
 			@Override
 			public Plan mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Plan p = new Plan();
-				p.setAccountid(rs.getLong(1));
-				p.setCpcplanid(rs.getLong(2));
+				p.setAccountId(rs.getLong(1));
+				p.setPlanId(rs.getLong(2));
 				p.setName(rs.getString(3));
+				p.setCreateDate(rs.getDate(4));
 				return p;
 			}
 			
@@ -44,37 +61,34 @@ public class ShardPlanDaoImpl implements ShardPlanDao {
 	}
 
 	@Override
-	public Plan updatePlanById(Long accountId, Plan p) {
-		StringBuilder sql = new StringBuilder("update cpcplan set ");
+	public Plan updatePlan(Long accountId, Plan p) {
+		StringBuilder sql = new StringBuilder("update plan set ");
 		List params = new ArrayList(); 
-		if(p.getIspause() != null) {
-			sql.append(" ispause=? ");
-			params.add(p.getIspause());
-		}
 		if(p.getName() != null){
-			sql.append(", name=?");
+			sql.append(" name=? ");
 			params.add(p.getName());
 		}
-		sql.append(" where accountid=? and cpcplanid=?");
+		sql.append(" where accountid=? and planid=?");
 		params.add(accountId);
-		params.add(p.getCpcplanid());
+		params.add(p.getPlanId());
 		
 		getJdbcTemplate().update(sql.toString(), params.toArray());
 		
-		return getPlanById(accountId, p.getCpcplanid());
+		return getPlanByPlanId(accountId, p.getPlanId());
 	}
  
-	public Plan getPlanById(Long accountId, Long planId) {
-		String sql = "select accountid, cpcplanid, name from cpcplan where accountid=? and cpcplanid=?";
+	public Plan getPlanByPlanId(Long accountId, Long planId) {
+		String sql = "select accountid, planid, name,createdate from plan where accountid=? and planid=?";
 		
 		List<Plan> plans = getJdbcTemplate().query(sql, new Object[]{accountId, planId}, new RowMapper<Plan>(){
 
 			@Override
 			public Plan mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Plan p = new Plan();
-				p.setAccountid(rs.getLong(1));
-				p.setCpcplanid(rs.getLong(2));
+				p.setAccountId(rs.getLong(1));
+				p.setPlanId(rs.getLong(2));
 				p.setName(rs.getString(3));
+				p.setCreateDate(rs.getDate(4));
 				return p;
 			}
 			
@@ -82,6 +96,8 @@ public class ShardPlanDaoImpl implements ShardPlanDao {
 				
 		return CollectionUtils.isNotEmpty(plans) ? plans.get(0) : null;
 	}
+
+	
 	
 	
 }

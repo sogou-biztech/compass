@@ -8,32 +8,32 @@ import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
-import com.sogou.bizdev.compass.sample.common.po.AccountForTest;
+import com.sogou.bizdev.compass.sample.common.po.Account;
 import com.sogou.bizdev.compass.sample.hibernate.masterslave.service.HibernateAccountService;
 
-@ContextConfiguration(locations = { "classpath*:/conf/hibernate/test-masterslave-*.xml","classpath*:test-masterslave-*.xml" })
+@ContextConfiguration(locations = { "classpath*:/conf/hibernate/test-masterslave-*.xml","classpath*:/datasource/masterslave/test-masterslave-*.xml" })
 public class HibernateAccountServiceTest extends AbstractJUnit4SpringContextTests {
     
 	@Test
 	public void testGetAccountById() {
 		HibernateAccountService accountService = (HibernateAccountService)applicationContext.getBean("hibernateAccountService");
-		AccountForTest accountForTest = accountService.getAccountById(375832L);
+		Account accountForTest = accountService.getAccountById(375832L);
 		Assert.assertNotNull(accountForTest);
-		Assert.assertEquals(accountForTest.getEmail(), "xincheng889@126.com");
+		Assert.assertEquals(accountForTest.getEmail(), "xxx@sogou.com");
 		System.out.println(accountForTest);
 	}
 	
 	@Test
 	public void testInsert() {
 		HibernateAccountService accountService = (HibernateAccountService)applicationContext.getBean("hibernateAccountService");
-		AccountForTest accountForTest = new AccountForTest();
+		Account accountForTest = new Account();
 		accountForTest.setAccountId(99999999L);
-		accountForTest.setEmail("xr");
-		accountForTest.setPassword("22222222");
+		accountForTest.setEmail("xxx@sogou.com");
+		accountForTest.setPassword("xxxxxxx");
 		accountForTest.setRegistDate(new Date());
-		accountService.createAccountForTest(accountForTest);
+		accountService.createAccount(accountForTest);
 		
-		AccountForTest accountForTest1 = accountService.getAccountById(99999999L);
+		Account accountForTest1 = accountService.getAccountById(99999999L);
 		accountForTest1 = accountService.getAccountById(99999999L);
 		accountForTest1 = accountService.getAccountById(99999999L);
 		accountForTest1 = accountService.getAccountById(99999999L);

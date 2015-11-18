@@ -1,6 +1,6 @@
 package com.sogou.bizdev.compass.sample.hibernate.combined.impl;
 
-import com.sogou.bizdev.compass.sample.common.po.AccountForTest;
+import com.sogou.bizdev.compass.sample.common.po.Account;
 import com.sogou.bizdev.compass.sample.common.po.Plan;
 import com.sogou.bizdev.compass.sample.hibernate.combined.ShardFirstService;
 import com.sogou.bizdev.compass.sample.hibernate.masterslave.service.HibernateAccountService;
@@ -31,7 +31,7 @@ public class ShardFirstServiceImpl implements ShardFirstService{
 
 	@Override
 	public Plan getMSAndShardPlan(Long accountId, Long planId) {
-		AccountForTest accountForTest = hibernateAccountService.getAccountById(accountId);
+		Account accountForTest = hibernateAccountService.getAccountById(accountId);
 		return shardHibernatePlanService.getPlanById(accountForTest.getAccountId(), planId);
 	}
 

@@ -17,6 +17,9 @@
 						<element name="availabilityDetector" type="tns:AvailabilityDetectorType"
 							maxOccurs="1" minOccurs="0">
 						</element>
+						<element name="pingStatement" type="tns:PingStatementType"
+							maxOccurs="1" minOccurs="0">
+						</element>
 						<element name="router" type="tns:DatasourceRouterType"
 							maxOccurs="1" minOccurs="0">
   						</element>
@@ -26,9 +29,7 @@
 						<element name="sqlInterceptor" type="tns:DatasourceSqlInterceptorType"
 							maxOccurs="1" minOccurs="0">
 						</element>
-						<element name="pingStatement" type="tns:PingStatementType"
-							maxOccurs="1" minOccurs="0">
-						</element>
+						
 					</sequence>
 					<attribute name="datasource-prototype" type="string" use="required">
 					</attribute>

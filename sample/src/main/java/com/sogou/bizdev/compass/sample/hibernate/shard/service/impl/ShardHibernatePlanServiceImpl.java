@@ -19,12 +19,12 @@ public class ShardHibernatePlanServiceImpl implements ShardHibernatePlanService 
 
 	@Override
 	public Plan getPlanById(Long accountId, Long planId) {
-		return shardHibernatePlanDao.findById(accountId, planId);
+		return shardHibernatePlanDao.getPlanById(accountId, planId);
 	}
 
 	@Override
 	public void createPlan(Long accountId, Plan plan) {
-		shardHibernatePlanDao.create(accountId, plan);
+		shardHibernatePlanDao.createPlan(accountId, plan);
 	}
 
 }

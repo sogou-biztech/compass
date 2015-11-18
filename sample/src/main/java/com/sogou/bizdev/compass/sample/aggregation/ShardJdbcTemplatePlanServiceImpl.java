@@ -19,7 +19,7 @@ public class ShardJdbcTemplatePlanServiceImpl implements ShardJdbcTemplatePlanSe
 	
 	@Override
 	public Plan queryPlanByPlanId(Long planId) {
-		String sql = "select * from cpcplan where cpcplanid=?";
+		String sql = "select * from plan where planid=?";
 		Object[] args = new Object[] { planId };
 		PlanMapper mapper = new PlanMapper();
 		
@@ -34,7 +34,7 @@ public class ShardJdbcTemplatePlanServiceImpl implements ShardJdbcTemplatePlanSe
 	
 	@Override
 	public List<Plan> listAllPlan() {
-		String sql = "select * from cpcplan";
+		String sql = "select * from plan";
 		return shardJdbcTemplate.query(sql, null, new PlanMapper());
 	}
 	
@@ -50,9 +50,9 @@ public class ShardJdbcTemplatePlanServiceImpl implements ShardJdbcTemplatePlanSe
 			int offset = pageCount * pageSize;
 			int rows = pageSize;
 			
-			String sql = "select * from cpcplan";
+			String sql = "select * from plan";
 			AggregationDescriptor descriptor = new AggregationDescriptor()
-				.orderBy("cpcplan_id", true)
+				.orderBy("planid", true)
 				.limit(offset, rows);
 			
 			shardJdbcTemplate.setMaxRows(1000000);
@@ -64,7 +64,7 @@ public class ShardJdbcTemplatePlanServiceImpl implements ShardJdbcTemplatePlanSe
 
 	@Override
 	public List<Plan> queryPlansByAccountIds(List<Long> accountIds) {
-		String sql = "select * from cpcplan where accountid in (" + ShardJdbcTemplate.RANGE_PLACEHOLDER + ")";
+		String sql = "select * from plan where accountid in (" + ShardJdbcTemplate.RANGE_PLACEHOLDER + ")";
 		Object[] args = new Object[] { accountIds };
 		PlanMapper mapper = new PlanMapper();
 
@@ -73,7 +73,7 @@ public class ShardJdbcTemplatePlanServiceImpl implements ShardJdbcTemplatePlanSe
 
 	@Override
 	public List<Plan> queryPlansByAccountIdsAndTime(List<Long> accountIds, String startTime, String endTime) {
-		String sql = "select * from cpcplan where"
+		String sql = "select * from plan where"
 				+ " createdate > ?"
 				+ " and accountid in (" + ShardJdbcTemplate.RANGE_PLACEHOLDER + ")"
 				+ " and createdate < ?";
@@ -85,10 +85,10 @@ public class ShardJdbcTemplatePlanServiceImpl implements ShardJdbcTemplatePlanSe
 
 	@Override
 	public List<PlanCount> countPlanOfAccounts(List<Long> accountIds) {
-		String sql = "select cpcplanid, accountid from cpcplan where accountid in (" + ShardJdbcTemplate.RANGE_PLACEHOLDER + ")";
+		String sql = "select planid, accountid from plan where accountid in (" + ShardJdbcTemplate.RANGE_PLACEHOLDER + ")";
 		Object[] args = new Object[] { accountIds };
 		AggregationDescriptor descriptor = new AggregationDescriptor()
-			.count("cpcplanid", "cpcplanidCount")
+			.count("planid", "planidCount")
 			.groupBy("accountid")
 			.orderBy("accountid", true);
 		AggregatedRowMapper<PlanCount> mapper = this.getPlanCountMapper();
@@ -103,7 +103,7 @@ public class ShardJdbcTemplatePlanServiceImpl implements ShardJdbcTemplatePlanSe
                 PlanCount planCount = new PlanCount();
                 
                 planCount.setAccountId((Long) aggregatedRow.get("accountid"));
-                planCount.setPlanCount((Integer) aggregatedRow.get("cpcplanidCount"));
+                planCount.setPlanCount((Integer) aggregatedRow.get("planidCount"));
                 
                 return planCount;
 			}
@@ -117,15 +117,10 @@ public class ShardJdbcTemplatePlanServiceImpl implements ShardJdbcTemplatePlanSe
 			public Plan mapRow(Map<String, Object> row) {
 				Plan plan = new Plan();
 				
-				plan.setCpcplanid((Long) row.get("cpcplanid"));
+				plan.setPlanId((Long) row.get("planid"));
 				plan.setName((String) row.get("name"));
-				plan.setIspause((Integer) row.get("ispause"));
-				plan.setAccountid((Long) row.get("accountid"));
-				plan.setCreatedate((Date) row.get("createdate"));
-				plan.setChgdate((Date) row.get("chgdate"));
-				plan.setStartDate((Date) row.get("start_date"));
-				plan.setEndDate((Date) row.get("end_date"));
-				
+ 				plan.setAccountId((Long) row.get("accountid"));
+				plan.setCreateDate((Date) row.get("createdate"));
 				return plan;
 			};
 		};
@@ -135,9 +130,9 @@ public class ShardJdbcTemplatePlanServiceImpl implements ShardJdbcTemplatePlanSe
 	public List<PlanCount> countAllPlanOfAccounts() {
 		int originMaxRows = shardJdbcTemplate.getMaxRows();
 		try {
-			String sql = "select cpcplanid, accountid from cpcplan";
+			String sql = "select planid, accountid from plan";
 			AggregationDescriptor descriptor = new AggregationDescriptor()
-				.count("cpcplanid", "cpcplanidCount")
+				.count("planid", "planidCount")
 				.groupBy("accountid")
 				.orderBy("accountid", true);
 			AggregatedRowMapper<PlanCount> mapper = this.getPlanCountMapper();
@@ -159,7 +154,7 @@ public class ShardJdbcTemplatePlanServiceImpl implements ShardJdbcTemplatePlanSe
 
 	@Override
 	public void updatePlan(Plan plan) {
-		String sql = "update cpcplan set name=?, ispause=?, accountid=?, createdate=?, chgdate=?, start_date=?, end_date=? where cpcplanid=?";
+		String sql = "update plan set name=?,accountid=?, createdate=? where planid=?";
 		Object[] args = this.convertToUpdateArgs(plan);
 		
 		shardJdbcTemplate.update(sql, args);
@@ -167,7 +162,7 @@ public class ShardJdbcTemplatePlanServiceImpl implements ShardJdbcTemplatePlanSe
 
 	@Override
 	public void updatePlans(List<Plan> planList) {
-		String sql = "update cpcplan set name=?, ispause=?, accountid=?, createdate=?, chgdate=?, start_date=?, end_date=? where cpcplanid=?";
+		String sql = "update plan set name=?, accountid=?, createdate=? where planid=?";
 		List<Object[]> args = new ArrayList<Object[]>();
 		
 		for (Plan plan : planList) {
@@ -180,13 +175,9 @@ public class ShardJdbcTemplatePlanServiceImpl implements ShardJdbcTemplatePlanSe
 	private Object[] convertToUpdateArgs(Plan plan) {
 		Object[] args = {
 				plan.getName(),
-				plan.getIspause(),
-				plan.getAccountid(),
-				plan.getCreatedate(),
-				plan.getChgdate(),
-				plan.getStartDate(),
-				plan.getEndDate(),
-				plan.getCpcplanid()
+				plan.getAccountId(),
+				plan.getCreateDate(),
+				plan.getPlanId()
 			};
 		
 		return args;

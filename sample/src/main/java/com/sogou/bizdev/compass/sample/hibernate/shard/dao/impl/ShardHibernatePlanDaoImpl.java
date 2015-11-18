@@ -20,13 +20,13 @@ public class ShardHibernatePlanDaoImpl implements ShardHibernatePlanDao {
 	}
 
 	@Override
-	public Plan findById(Long accountId, Long planId) {
-		List list = shardHibernateTemplate.find("from Plan where accountid=" + accountId + " and cpcplanid=" + planId);
+	public Plan getPlanById(Long accountId, Long planId) {
+		List list = shardHibernateTemplate.find("from Plan where accountId=" + accountId + " and planId=" + planId);
 		return (list == null || list.size() == 0) ? null : (Plan)list.get(0);
 	}
 
 	@Override
-	public void create(Long accountId, Plan plan) {
+	public void createPlan(Long accountId, Plan plan) {
 		shardHibernateTemplate.save(plan);
 	}
         

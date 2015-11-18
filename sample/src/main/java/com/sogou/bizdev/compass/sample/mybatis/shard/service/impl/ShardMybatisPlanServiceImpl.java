@@ -21,30 +21,30 @@ public class ShardMybatisPlanServiceImpl implements ShardMybatisPlanService {
 
 	@Override
 	public Plan queryPlanByPlanId(Long accountId,Long planId) {
- 		return planDao.selectByPrimaryKey(planId);
+ 		return planDao.getPlanByPlanId(planId);
 	}
 
 	@Override
-	public List<Plan> queryPlansByPlanIds(Long accountId,List<Long> planId) {
+	public List<Plan> queryPlansByPlanIds(Long accountId,List<Long> planIds) {
 		PlanExample planExample=new PlanExample();
-		planExample.createCriteria().andCpcplanidIn(planId);
-		planExample.createCriteria().andAccountidEqualTo(accountId); 
-		return planDao.selectByExample(planExample);
+		planExample.createCriteria().andPlanIdIn(planIds);
+		planExample.createCriteria().andAccountIdEqualTo(accountId); 
+		return planDao.queryPlansByPlanIds(planExample);
 	}
 
 	@Override
-	public int insert(Long accountId,Plan plan) {
-		return planDao.insert(plan);
+	public int createPlan(Long accountId,Plan plan) {
+		return planDao.createPlan(plan);
 	}
 
 	@Override
-	public int update(Long accountId,Plan plan) {
-		return planDao.updateByPrimaryKey(plan);
+	public int updatePlan(Long accountId,Plan plan) {
+		return planDao.updatePlan(plan);
 	}
 
 	@Override
-	public int delete(Long accountId,Long planId) {
-		return planDao.deleteByPrimaryKey(planId);
+	public int deletePlan(Long accountId,Long planId) {
+		return planDao.deletePlan(planId);
 	}
 
 }

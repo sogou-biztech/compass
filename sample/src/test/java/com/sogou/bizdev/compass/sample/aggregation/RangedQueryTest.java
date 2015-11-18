@@ -14,7 +14,7 @@ import com.sogou.bizdev.compass.aggregation.template.ShardJdbcTemplate;
 
 @ContextConfiguration(locations = { 
 		"classpath*:/conf/aggregation/test-aggregation-shardjdbctemplate.xml",
-		"classpath*:test-shard-*.xml" 
+		"classpath*:/datasource/shard/test-shard-*.xml" 
 	})
 /**
  * 指定范围查询示例：
@@ -23,7 +23,7 @@ import com.sogou.bizdev.compass.aggregation.template.ShardJdbcTemplate;
  * "指定范围查询"共支持三种参数形式，可分别参见sample1(), sample2(), sample3()
  * "指定范围查询"与"聚合查询"结合使用的示例，请参见aggregatedSample()
  * 
- * @author yanke
+ * @author yk
  *
  */
 public class RangedQueryTest extends AbstractJUnit4SpringContextTests {
@@ -53,7 +53,7 @@ public class RangedQueryTest extends AbstractJUnit4SpringContextTests {
 		List<Map<String, Object>> resultList = shardJdbcTemplate.query(sql, args);
 		
 		for (Map<String, Object> row : resultList) {
-			System.out.println(row.get("accountid") + ", " + row.get("cpcplanid") + ", " + row.get("name"));
+			System.out.println(row.get("accountid") + ", " + row.get("planid") + ", " + row.get("name"));
 		}
 	}
 	
@@ -68,7 +68,7 @@ public class RangedQueryTest extends AbstractJUnit4SpringContextTests {
 		List<Map<String, Object>> resultList = shardJdbcTemplate.query(sql, args);
 		
 		for (Map<String, Object> row : resultList) {
-			System.out.println(row.get("accountid") + ", " + row.get("cpcplanid") + ", " + row.get("name"));
+			System.out.println(row.get("accountid") + ", " + row.get("planid") + ", " + row.get("name"));
 		}
 	}
 	
@@ -83,7 +83,7 @@ public class RangedQueryTest extends AbstractJUnit4SpringContextTests {
 		List<Map<String, Object>> resultList = shardJdbcTemplate.query(sql, args);
 		
 		for (Map<String, Object> row : resultList) {
-			System.out.println(row.get("accountid") + ", " + row.get("cpcplanid") + ", " + row.get("name"));
+			System.out.println(row.get("accountid") + ", " + row.get("planid") + ", " + row.get("name"));
 		}
 		
 	}
@@ -98,7 +98,7 @@ public class RangedQueryTest extends AbstractJUnit4SpringContextTests {
 		// 指定范围查询除需要用RANGE_PLACEHOLDER替换掉sql的in语句中的?以外，并无特殊
 		// 因此同样可以与聚合描述器结合
 		AggregationDescriptor descriptor = new AggregationDescriptor()
-						.count("cpcplanid", "cpcplanidCount")
+						.count("cpcplanid", "planidCount")
 						.groupBy("accountid")
 						.orderBy("accountid", true);
 		
@@ -107,7 +107,7 @@ public class RangedQueryTest extends AbstractJUnit4SpringContextTests {
 		List<Map<String, Object>> resultList = shardJdbcTemplate.query(sql, args, descriptor);
 		
 		for (Map<String, Object> row : resultList) {
-			System.out.println(row.get("accountid") + ", " + row.get("cpcplanidCount"));
+			System.out.println(row.get("accountid") + ", " + row.get("planidCount"));
 		}
 	}
 	

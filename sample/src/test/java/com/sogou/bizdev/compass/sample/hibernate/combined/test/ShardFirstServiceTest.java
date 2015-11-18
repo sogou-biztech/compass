@@ -14,7 +14,7 @@ import com.sogou.bizdev.compass.sample.hibernate.combined.ShardFirstService;
  * @version 1.0.0
  * @since 1.0.0
  */
-@ContextConfiguration(locations = { "classpath*:/conf/hibernate/test-shard-*.xml","classpath*:test-shard-*.xml","/conf/hibernate/test-masterslave-*.xml","classpath*:test-masterslave-*.xml" })
+@ContextConfiguration(locations = { "classpath*:/conf/hibernate/test-shard-*.xml","classpath*:/datasource/shard/test-shard-*.xml","/conf/hibernate/test-masterslave-*.xml","classpath*:/datasource/masterslave/test-masterslave-*.xml" })
 public class ShardFirstServiceTest extends AbstractJUnit4SpringContextTests{
 	
 	@Test

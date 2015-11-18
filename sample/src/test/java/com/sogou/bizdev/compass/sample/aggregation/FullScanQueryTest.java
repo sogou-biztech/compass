@@ -13,13 +13,13 @@ import com.sogou.bizdev.compass.aggregation.template.ShardJdbcTemplate;
 
 @ContextConfiguration(locations = { 
 	"classpath*:/conf/aggregation/test-aggregation-shardjdbctemplate.xml",
-	"classpath*:test-shard-*.xml" 
+	"classpath*:/datasource/shard/test-shard-*.xml" 
 })
 /**
  * 扫描全表查询示例：
  * 查询指定日期内的全部cpcplan、进行排序或聚合
  * 
- * @author yanke
+ * @author yk
  *
  */
 public class FullScanQueryTest extends AbstractJUnit4SpringContextTests {
@@ -27,7 +27,7 @@ public class FullScanQueryTest extends AbstractJUnit4SpringContextTests {
 	@Autowired
 	private ShardJdbcTemplate shardJdbcTemplate;
 	
-	private String sql = "select * from cpcplan where createdate between ? and ?";
+	private String sql = "select * from plan where createdate between ? and ?";
 	private Object[] args = new Object[] {
 								"2012-09-01",
 								"2012-12-31"
@@ -41,7 +41,7 @@ public class FullScanQueryTest extends AbstractJUnit4SpringContextTests {
 		List<Map<String, Object>> resultList = shardJdbcTemplate.query(sql, args);
 		
 		for (Map<String, Object> row : resultList) {
-			System.out.println(row.get("accountid") + ", " + row.get("cpcplanid") + ", " + row.get("name"));
+			System.out.println(row.get("accountid") + ", " + row.get("planid") + ", " + row.get("name"));
 		}
 	}
 	
@@ -58,7 +58,7 @@ public class FullScanQueryTest extends AbstractJUnit4SpringContextTests {
 		List<Map<String, Object>> resultList = shardJdbcTemplate.query(sql, args, descriptor);
 		
 		for (Map<String, Object> row : resultList) {
-			System.out.println(row.get("accountid") + ", " + row.get("cpcplanid") + ", " + row.get("name"));
+			System.out.println(row.get("accountid") + ", " + row.get("planid") + ", " + row.get("name"));
 		}
 	}
 	
@@ -74,12 +74,12 @@ public class FullScanQueryTest extends AbstractJUnit4SpringContextTests {
 		// select cpcplan.*, count(cpcplanid) as cpcplanidCount from cpcplan where createdate between ? and ? group by accountid order by accountid asc
 		AggregationDescriptor descriptor = new AggregationDescriptor();
 		descriptor.groupBy("accountid")
-					.count("cpcplanid", "cpcplanidCount")	
+					.count("planid", "planidCount")	
 					.orderBy("accountid", true);
 		List<Map<String, Object>> resultList = shardJdbcTemplate.query(sql, args, descriptor);
 		
 		for (Map<String, Object> row : resultList) {
-			System.out.println(row.get("accountid") + ", " + row.get("cpcplanidCount"));
+			System.out.println(row.get("accountid") + ", " + row.get("planidCount"));
 		}
 	}
 

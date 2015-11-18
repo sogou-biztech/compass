@@ -669,9 +669,8 @@ public class DatasourceBeanDefinitionParser extends AbstractBeanDefinitionParser
 		if(groupElements.size()==1)
 		{
 			Element dataSourceRouterElement = DomUtils.getChildElementByTagName(dataSourceElement,ROUTER);
-			Element sqlInterceptorElement = DomUtils.getChildElementByTagName(dataSourceElement,SQLINTERCEPTOR);
-			//主从库设置了router的也认为是分库
-			if(dataSourceRouterElement!=null || sqlInterceptorElement!=null)
+			//主从库设置了router的也认为是分库,而且必须自定义实现
+			if(dataSourceRouterElement!=null)
 			{
 				return DataSourceType.SHARD_DATASOURCE;
 			}

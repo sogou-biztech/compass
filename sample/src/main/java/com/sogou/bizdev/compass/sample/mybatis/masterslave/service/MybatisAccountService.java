@@ -2,7 +2,7 @@ package com.sogou.bizdev.compass.sample.mybatis.masterslave.service;
 
 import java.util.List;
 
-import com.sogou.bizdev.compass.sample.common.po.AccountForTest;
+import com.sogou.bizdev.compass.sample.common.po.Account;
 
 
 
@@ -11,31 +11,31 @@ public interface MybatisAccountService {
 	 * @param AccountId
 	 * @return
 	 */
-	public AccountForTest queryAccountByAccountId(Long accountId);
+	public Account getAccountByAccountId(Long accountId);
 	
 	/**查询多个账户
 	 * @param AccountId
 	 * @return
 	 */
-	public List<AccountForTest> queryAccountsByAccountIds(List<Long> AccountIds);
+	public List<Account> getAccountsByAccountIds(List<Long> accountIds);
 	
 	/**新增账户
-	 * @param AccountForTest
+	 * @param account
 	 * @return
 	 */
-	public int insert(AccountForTest AccountForTest);
+	public int createAccount(Account account);
 	
 	/**更新账户
-	 * @param AccountForTest
+	 * @param account
 	 * @return
 	 */
-	public int update(AccountForTest AccountForTest);
+	public int updateAccount(Account account);
 	
 	/**删除账户
-	 * @param AccountId
+	 * @param accountId
 	 * @return
 	 */
-	public int delete(Long AccountId);
+	public int deleteAccount(Long accountId);
 	 
 	
 }

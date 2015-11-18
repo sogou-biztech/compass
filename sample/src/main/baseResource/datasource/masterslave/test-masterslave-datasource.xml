@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:ds="http://www.sogou.com/schema/datasource"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.sogou.com/schema/datasource http://www.sogou.com/schema/datasource/datasource.xsd">
+
+	<!-- Shards Datasources -->
+	<bean id="default_masterslave_ds" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		abstract="true" destroy-method="close">
+		<property name="driverClass">
+			<value>${datasource.oracle.driverClassName}</value>
+		</property>
+		<property name="user">
+			<value>${datasource.masterslave.username}</value>
+		</property>
+		<property name="password">
+			<value>${datasource.masterslave.password}</value>
+		</property>
+		<property name="maxPoolSize">
+			<value>${datasource.masterslave.maxPoolSize}</value>
+		</property>
+		<property name="minPoolSize">
+			<value>${datasource.masterslave.minPoolSize}</value>
+		</property>
+		<property name="initialPoolSize">
+			<value>${datasource.masterslave.initialPoolSize}</value>
+		</property>
+		<property name="idleConnectionTestPeriod">
+			<value>${datasource.masterslave.idleConnectionTestPeriod}</value>
+		</property>
+		<property name="maxIdleTime">
+			<value>${datasource.masterslave.maxIdleTime}</value>
+		</property>
+		<property name="checkoutTimeout">
+			<value>${datasource.masterslave.checkoutTimeout}</value>
+		</property>
+	</bean>
+
+	<ds:datasource id="masterslaveDataSource"
+		datasource-prototype="default_masterslave_ds">
+			<ds:group name="masterslave">
+				<ds:master jdbcUrl="${datasource.masterslave}"/>
+ 				<ds:slave  jdbcUrl="${datasource.masterslave.s1}"/>
+ 				<ds:slave  jdbcUrl="${datasource.masterslave.s2}"/>
+ 			</ds:group>
+			
+
+			<!-- 心跳探测器 -->
+			<!-- <ds:availabilityDetector interval="5" detectPoolSize="16">
+				 不可同时设置重复的attribute和property
+				<property name="enabled" value="false"></property>
+			</ds:availabilityDetector> -->
+			<!-- 心跳探测SQL -->
+			<ds:pingStatement value="select 2 from dual" />
+			
+			<!-- 基于权重进行负载均衡,如不设置默认权重全为1 -->
+			<ds:loadbalance loadBalanceStrategy="weightedRoundRobin" /> 
+			<!-- <ds:loadbalance class="com.sogou.bizdev.compass.core.selector.loadbalance.strategy.WeightedRandom">
+				<property name="weight" value="1"></property>
+			</ds:loadbalance> -->
+	 </ds:datasource>
+
+</beans>

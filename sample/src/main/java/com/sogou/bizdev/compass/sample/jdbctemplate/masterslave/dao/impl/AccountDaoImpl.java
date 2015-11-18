@@ -24,14 +24,16 @@ public class AccountDaoImpl implements AccountDao {
 
 	@Override
 	public Account getAccountById(Long accountId) {
-		String sql = "select i_account_id, c_email from account where i_account_id=?";
+		String sql = "select accountid, email,password,registdate from account where accountid=?";
 		List<Account> accounts = getJdbcTemplate().query(sql, new Object[]{accountId}, new RowMapper(){
 
 			@Override
 			public Account mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Account account = new Account();
-				account.setiAccountId(rs.getLong(1));
-				account.setcEmail(rs.getString(2));
+				account.setAccountId(rs.getLong(1));
+				account.setEmail(rs.getString(2));
+				account.setPassword(rs.getString(3));
+				account.setRegistDate(rs.getDate(4));
 				return account;
 			}
 			

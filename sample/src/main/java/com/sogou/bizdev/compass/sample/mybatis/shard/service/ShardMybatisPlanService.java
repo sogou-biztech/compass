@@ -24,17 +24,17 @@ public interface ShardMybatisPlanService {
 	 * @param plan
 	 * @return
 	 */
-	public int insert(@RouteKey Long accountId,Plan plan);
+	public int createPlan(@RouteKey Long accountId,Plan plan);
 	
 	/**更新计划
 	 * @param plan
 	 * @return
 	 */
-	public int update(@RouteKey Long accountId,Plan plan);
+	public int updatePlan(@RouteKey Long accountId,Plan plan);
 	
 	/**删除计划
 	 * @param planId
 	 * @return
 	 */
-	public int delete(@RouteKey Long accountId,Long planId);
+	public int deletePlan(@RouteKey Long accountId,Long planId);
 }

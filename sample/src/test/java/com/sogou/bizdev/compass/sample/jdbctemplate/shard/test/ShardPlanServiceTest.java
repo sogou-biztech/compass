@@ -1,7 +1,10 @@
 package com.sogou.bizdev.compass.sample.jdbctemplate.shard.test;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
@@ -9,38 +12,50 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import com.sogou.bizdev.compass.sample.common.po.Plan;
 import com.sogou.bizdev.compass.sample.jdbctemplate.shard.service.ShardPlanService;
 
-@ContextConfiguration(locations = { "classpath*:/conf/jdbctemplate/test-shard-*.xml","classpath*:test-shard-*.xml" })
+@ContextConfiguration(locations = { "classpath*:/conf/jdbctemplate/test-shard-*.xml","classpath*:/datasource/shard/test-shard-*.xml" })
 public class ShardPlanServiceTest extends AbstractJUnit4SpringContextTests {
+	private  final static Long ACCOUNTID=428937L;
+	private static Long newPlanId=null;
+	private final static Integer start=65535;
+
 	
-	private ShardPlanService shardPlanService;
-
-	public ShardPlanService getShardPlanService() {
-		return shardPlanService;
-	}
-
-	public void setShardPlanService(ShardPlanService shardPlanService) {
-		this.shardPlanService = shardPlanService;
+	@Test
+	public void testCreatePlanById() {
+		ShardPlanService shardPlanService = (ShardPlanService)applicationContext.getBean("shardPlanService", ShardPlanService.class);
+		Plan plan=createPlan();
+		shardPlanService.createPlans(ACCOUNTID, plan);
+		Assert.assertTrue(plan!=null);
+		newPlanId=plan.getPlanId();
 	}
 	
-	private Long accountId = 375832L;
-
+	
 	@Test
 	public void testGetPlanById() {
 		ShardPlanService shardPlanService = (ShardPlanService)applicationContext.getBean("shardPlanService", ShardPlanService.class);
-		List<Plan> plans = shardPlanService.getPlansById(375832L);
-		System.err.println(plans);
+		List<Plan> plans = shardPlanService.getPlansByAccountId(ACCOUNTID);
+		Assert.assertTrue(plans!=null&&plans.size()!=0);
 	}
 	
 	@Test
 	public void testUpdatePlanById() {
 		ShardPlanService shardPlanService = (ShardPlanService)applicationContext.getBean("shardPlanService", ShardPlanService.class);
 		Plan p = new Plan();
-		Long planId = -1385028000567L;
-		p.setAccountid(accountId);
-		p.setCpcplanid(planId);
-		p.setName("testshard");
-		p.setIspause(1);
-		System.err.println(shardPlanService.updatePlanById(accountId, p));
+		p.setAccountId(ACCOUNTID);
+		p.setPlanId(newPlanId);
+		p.setName("newplan"+System.currentTimeMillis());
+		p=shardPlanService.updatePlan(ACCOUNTID, p);
+		Assert.assertTrue(p.getName().startsWith("newplan"));
 	}
-	 
+	
+	
+	public Plan createPlan(){
+		Plan plan=new Plan();
+ 		plan.setPlanId(new Random().nextInt(start)+100000000L);
+
+		plan.setAccountId(ACCOUNTID);
+ 		plan.setCreateDate(new Date());
+		plan.setName("myplan"+System.currentTimeMillis());
+		return plan;
+		
+	}
 }

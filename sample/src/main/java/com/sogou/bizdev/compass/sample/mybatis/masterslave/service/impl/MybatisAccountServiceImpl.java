@@ -2,8 +2,8 @@ package com.sogou.bizdev.compass.sample.mybatis.masterslave.service.impl;
 
 import java.util.List;
 
-import com.sogou.bizdev.compass.sample.common.po.AccountForTest;
-import com.sogou.bizdev.compass.sample.common.po.AccountForTestExample;
+import com.sogou.bizdev.compass.sample.common.po.Account;
+import com.sogou.bizdev.compass.sample.common.po.AccountExample;
 import com.sogou.bizdev.compass.sample.mybatis.masterslave.dao.MybatisAccountDao;
 import com.sogou.bizdev.compass.sample.mybatis.masterslave.service.MybatisAccountService;
 
@@ -20,30 +20,30 @@ public class MybatisAccountServiceImpl implements MybatisAccountService {
 	}
 
 	@Override
-	public AccountForTest queryAccountByAccountId(Long accountId) {
- 		return accountDao.selectByPrimaryKey(accountId);
+	public Account getAccountByAccountId(Long accountId) {
+ 		return accountDao.getAccountByAccountId(accountId);
 	}
 
 	@Override
-	public List<AccountForTest> queryAccountsByAccountIds(List<Long> AccountIds) {
-		AccountForTestExample accountForTestExample=new AccountForTestExample();
+	public List<Account> getAccountsByAccountIds(List<Long> AccountIds) {
+		AccountExample accountForTestExample=new AccountExample();
 		accountForTestExample.createCriteria().andAccountIdIn(AccountIds);
- 		return accountDao.selectByExample(accountForTestExample);
+ 		return accountDao.getAccountsByAccountIds(accountForTestExample);
 	}
 
 	@Override
-	public int insert(AccountForTest AccountForTest) {
-		return accountDao.insert(AccountForTest);
+	public int createAccount(Account AccountForTest) {
+		return accountDao.createAccount(AccountForTest);
 	}
 
 	@Override
-	public int update(AccountForTest AccountForTest) {
-		return accountDao.updateByPrimaryKey(AccountForTest);
+	public int updateAccount(Account AccountForTest) {
+		return accountDao.updateAccount(AccountForTest);
 	}
 
 	@Override
-	public int delete(Long AccountId) {
-		return accountDao.deleteByPrimaryKey(AccountId);
+	public int deleteAccount(Long AccountId) {
+		return accountDao.deleteAccount(AccountId);
 	}
 
 	 

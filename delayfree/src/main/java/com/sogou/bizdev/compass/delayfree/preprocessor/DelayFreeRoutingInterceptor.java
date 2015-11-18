@@ -32,8 +32,8 @@ public class DelayFreeRoutingInterceptor extends RoutingInterceptor implements
 	}
 
 	public void setUseRouteKeyAsAntiDelayKey(
-			boolean useRoutingKeyAsAntiDelayKey) {
-		this.useRouteKeyAsAntiDelayKey = useRoutingKeyAsAntiDelayKey;
+			boolean useRouteKeyAsAntiDelayKey) {
+		this.useRouteKeyAsAntiDelayKey = useRouteKeyAsAntiDelayKey;
 	}
 
 	public DelayFree getDelayFree() {
@@ -49,7 +49,7 @@ public class DelayFreeRoutingInterceptor extends RoutingInterceptor implements
 		
 		Object routeKey = context.getRouteKey();
 		Object antiDelayKey = null;
-		// 如果useRoutingKeyAsAntiDelayKey=true,那么以路由标识作为反延时标识
+		// 如果useRouteKeyAsAntiDelayKey=true,那么以路由标识作为反延时标识
 		if (useRouteKeyAsAntiDelayKey) {
 			antiDelayKey = routeKey;
 		} else {

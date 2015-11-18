@@ -7,8 +7,7 @@ import java.lang.reflect.Method;
 
 /** 
  * @Description: 主从属性源,根据方法判断当前方法是去主库还是从库
- * @author zhangjuncheng@sogou-inc.com
- * @date 2014-5-7 下午4:35:39 
+ * @author zjc
  * @since 1.0.0 
  */
 public interface MasterSlaveAttributeSource {

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+ 
+<hibernate-mapping>
+    <class name="com.sogou.bizdev.compass.sample.common.po.Account" table="ACCOUNT" dynamic-insert="true" dynamic-update="true">
+			<id column="ACCOUNTID" name="accountId" type="java.lang.Long">
+			  	<generator class="assigned" />
+			</id>
+            <property name="email" type="java.lang.String">
+                <column name="EMAIL" length="128" />
+            </property>
+            <property name="password" type="java.lang.String">
+                <column name="PASSWORD" length="32" />
+            </property>
+            <property name="registDate" type="java.util.Date">
+                <column name="REGISTDATE" length="7" />
+            </property>
+    </class>
+</hibernate-mapping>

@@ -1,6 +1,6 @@
 package com.sogou.bizdev.compass.sample.hibernate.masterslave.service.impl;
 
-import com.sogou.bizdev.compass.sample.common.po.AccountForTest;
+import com.sogou.bizdev.compass.sample.common.po.Account;
 import com.sogou.bizdev.compass.sample.hibernate.masterslave.service.HibernateAccountMSService;
 import com.sogou.bizdev.compass.sample.hibernate.masterslave.service.HibernateAccountService;
 
@@ -18,23 +18,23 @@ public class HibernateAccountMSServiceImpl implements HibernateAccountMSService 
 	}
 
 	@Override
-	public void createSlaveInMaster(AccountForTest accountForTest) {
+	public void createSlaveInMaster(Account accountForTest) {
 		hibernateAccountService.getAccountById(accountForTest.getAccountId());
 	}
 
 	@Override
-	public void createMasterInMaster(AccountForTest accountForTest) {
-		hibernateAccountService.createAccountForTest(accountForTest);
+	public void createMasterInMaster(Account accountForTest) {
+		hibernateAccountService.createAccount(accountForTest);
 	}
 
 	@Override
-	public AccountForTest findSlaveInSlave(Long accountId) {
+	public Account findSlaveInSlave(Long accountId) {
 		return hibernateAccountService.getAccountById(accountId);
 	}
 
 	@Override
-	public AccountForTest findWriteInRead(AccountForTest accountForTest) {
-		hibernateAccountService.createAccountForTest(accountForTest);
+	public Account findWriteInRead(Account accountForTest) {
+		hibernateAccountService.createAccount(accountForTest);
 		return hibernateAccountService.getAccountById(accountForTest.getAccountId());
 	}
 

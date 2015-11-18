@@ -3,6 +3,7 @@ package com.sogou.bizdev.compass.sample.mybatis.shard.test;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import junit.framework.Assert;
 
@@ -11,23 +12,23 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import com.sogou.bizdev.compass.sample.common.po.Plan;
-import com.sogou.bizdev.compass.sample.jdbctemplate.sequence.SequenceGenerator;
 import com.sogou.bizdev.compass.sample.mybatis.shard.service.ShardMybatisPlanService;
 
-@ContextConfiguration(locations = { "classpath*:/conf/mybatis/test-shard-*.xml","classpath*:test-shard-*.xml","classpath*:/conf/jdbctemplate/test-sequence-*.xml","classpath*:test-sequence-*.xml"})
+@ContextConfiguration(locations = { "classpath*:/conf/mybatis/test-shard-*.xml","classpath*:/datasource/shard/test-shard-*.xml"})
 public class ShardMybatisPlanServiceTest extends AbstractJUnit4SpringContextTests {
 	private  final static Long ACCOUNTID=428937L;
-	private  final static String PLAN_SEQUENCE="CPCPLAN_SEQ"; 
 	private static Long newPlanId=null;
+	private final static Integer start=65535;
+
 	
 	@Test
 	public void testInsertPlan() {
 		ShardMybatisPlanService shardMybatisPlanService = (ShardMybatisPlanService)applicationContext.getBean("shardMybatisPlanService", ShardMybatisPlanService.class);
 		
 		Plan plan=createPlan();
-		shardMybatisPlanService.insert(ACCOUNTID,plan);
+		shardMybatisPlanService.createPlan(ACCOUNTID,plan);
 		Assert.assertTrue(plan!=null);
-		newPlanId=plan.getCpcplanid();
+		newPlanId=plan.getPlanId();
  	}
 	
 	@Test
@@ -36,7 +37,7 @@ public class ShardMybatisPlanServiceTest extends AbstractJUnit4SpringContextTest
 		
 		Plan plan = shardMybatisPlanService.queryPlanByPlanId(ACCOUNTID, newPlanId);
 		Assert.assertTrue(plan!=null);
-		Assert.assertTrue(plan.getCpcplanid().longValue()==newPlanId);
+		Assert.assertTrue(plan.getPlanId().longValue()==newPlanId);
 	}
 	
 	@Test
@@ -57,12 +58,10 @@ public class ShardMybatisPlanServiceTest extends AbstractJUnit4SpringContextTest
 		ShardMybatisPlanService shardMybatisPlanService = (ShardMybatisPlanService)applicationContext.getBean("shardMybatisPlanService", ShardMybatisPlanService.class);
 		
 		Plan plan = shardMybatisPlanService.queryPlanByPlanId(ACCOUNTID, newPlanId);
-		plan.setIspause(1);
 		plan.setName("1myplan"+System.currentTimeMillis());
- 		shardMybatisPlanService.update(ACCOUNTID,plan);
+ 		shardMybatisPlanService.updatePlan(ACCOUNTID,plan);
  		plan = shardMybatisPlanService.queryPlanByPlanId(ACCOUNTID, newPlanId);
 		Assert.assertTrue(plan!=null);
-		Assert.assertTrue(plan.getIspause()==1);
 		Assert.assertTrue(plan.getName().startsWith("1myplan"));
  	}
 	
@@ -71,23 +70,18 @@ public class ShardMybatisPlanServiceTest extends AbstractJUnit4SpringContextTest
 		ShardMybatisPlanService shardMybatisPlanService = (ShardMybatisPlanService)applicationContext.getBean("shardMybatisPlanService", ShardMybatisPlanService.class);
 		
 		 
- 		shardMybatisPlanService.delete(ACCOUNTID,newPlanId);
+ 		shardMybatisPlanService.deletePlan(ACCOUNTID,newPlanId);
  		Plan plan = shardMybatisPlanService.queryPlanByPlanId(ACCOUNTID, newPlanId);
 		Assert.assertTrue(plan==null);
   	}
 	 
  	public Plan createPlan(){
 		Plan plan=new Plan();
-		SequenceGenerator sequenceGenerator = (SequenceGenerator)applicationContext.getBean("sequenceGenerator", SequenceGenerator.class);
-		plan.setCpcplanid(sequenceGenerator.getSequence(PLAN_SEQUENCE));
+ 		plan.setPlanId(new Random().nextInt(start)+100000000L);
 
-		plan.setAccountid(428937L);
-		plan.setChgdate(new Date());
-		plan.setCreatedate(new Date());
-		plan.setEndDate(new Date());
-		plan.setIspause(0);
+		plan.setAccountId(ACCOUNTID);
+ 		plan.setCreateDate(new Date());
 		plan.setName("myplan"+System.currentTimeMillis());
-		plan.setStartDate(new Date());
 		return plan;
 		
 	}
@@ -98,31 +92,25 @@ public class ShardMybatisPlanServiceTest extends AbstractJUnit4SpringContextTest
 		ShardMybatisPlanService shardMybatisPlanService = (ShardMybatisPlanService)applicationContext.getBean("shardMybatisPlanService", ShardMybatisPlanService.class);
 		
 		Plan plan=createPlan();
-		//1.构造shard08库异常，插入该库plan
+		boolean error=false;
+		//1.构造shard02库异常，插入该库plan
 		try {
-			shardMybatisPlanService.insert(3L,plan);
+			shardMybatisPlanService.createPlan(ACCOUNTID,plan);
 		} catch (Exception e) {
 			//此处必抛出异常
 			System.out.println("dev.dubhe08.mysql config error,invoke fail "+e);
+			error=true;
 		}
-		Assert.assertTrue(plan!=null);
-		newPlanId=plan.getCpcplanid();
-		//执行失败
- 		
-		//2.插入正常库plan
-		plan=createPlan();
-		shardMybatisPlanService.insert(6L,plan);
-		Assert.assertTrue(plan!=null);
-		newPlanId=plan.getCpcplanid();
-		//执行成功
+		Assert.assertTrue(error);
+		 
 		
-		//3.恢复shard08库构造，线程阻塞一段时间，然后执行插入该库plan
+		//3.恢复shard02库构造，线程阻塞一段时间，然后执行插入该库plan
 		System.out.println("start thread sleep 20s");
 		Thread.sleep(20000);
  		plan=createPlan();
-		shardMybatisPlanService.insert(3L,plan);
+		shardMybatisPlanService.createPlan(ACCOUNTID,plan);
 		Assert.assertTrue(plan!=null);
-		newPlanId=plan.getCpcplanid();
+		newPlanId=plan.getPlanId();
 		//执行成功
  	}
 	 

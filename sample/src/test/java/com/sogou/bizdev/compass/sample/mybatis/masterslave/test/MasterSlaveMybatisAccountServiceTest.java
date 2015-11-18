@@ -11,10 +11,10 @@ import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
-import com.sogou.bizdev.compass.sample.common.po.AccountForTest;
+import com.sogou.bizdev.compass.sample.common.po.Account;
 import com.sogou.bizdev.compass.sample.mybatis.masterslave.service.MybatisAccountService;
 
-@ContextConfiguration(locations = { "classpath*:/conf/mybatis/test-masterslave-*.xml","classpath*:test-masterslave-*.xml","classpath*:appContext-compass-jmx.xml" })
+@ContextConfiguration(locations = { "classpath*:/conf/mybatis/test-masterslave-*.xml","classpath*:/datasource/masterslave/test-masterslave-*.xml"})
 public class MasterSlaveMybatisAccountServiceTest extends AbstractJUnit4SpringContextTests {
 	
 	private static Long newAccountId=null;
@@ -26,8 +26,8 @@ public class MasterSlaveMybatisAccountServiceTest extends AbstractJUnit4SpringCo
 	public void testInsertAccount() {
 		MybatisAccountService mybatisAccountService = (MybatisAccountService)applicationContext.getBean("mybatisAccountService", MybatisAccountService.class);
 		
-		AccountForTest account=createAccount();
-		mybatisAccountService.insert(account);
+		Account account=createAccount();
+		mybatisAccountService.createAccount(account);
 		Assert.assertTrue(account!=null);
 		newAccountId=account.getAccountId();
  	}
@@ -35,7 +35,7 @@ public class MasterSlaveMybatisAccountServiceTest extends AbstractJUnit4SpringCo
 	@Test
 	public void testGetAccountById() {
 		MybatisAccountService accountService = (MybatisAccountService)applicationContext.getBean("mybatisAccountService", MybatisAccountService.class);
-		AccountForTest account = accountService.queryAccountByAccountId(newAccountId);
+		Account account = accountService.getAccountByAccountId(newAccountId);
 		Assert.assertTrue(account!=null);
 		Assert.assertTrue(account.getAccountId().longValue()==newAccountId);
 	}
@@ -49,7 +49,7 @@ public class MasterSlaveMybatisAccountServiceTest extends AbstractJUnit4SpringCo
 		accountIds.add(82267L);
 		accountIds.add(newAccountId);
 		
-		List<AccountForTest> accountForTests = accountService.queryAccountsByAccountIds(accountIds);
+		List<Account> accountForTests = accountService.getAccountsByAccountIds(accountIds);
 		Assert.assertTrue(accountForTests!=null);
 		Assert.assertTrue(accountForTests.size()==1);
 	}
@@ -58,15 +58,15 @@ public class MasterSlaveMybatisAccountServiceTest extends AbstractJUnit4SpringCo
 	public void testUpdateAccount() {
 		MybatisAccountService accountService = (MybatisAccountService)applicationContext.getBean("mybatisAccountService", MybatisAccountService.class);
 		
-		AccountForTest account =accountService.queryAccountByAccountId(newAccountId);
-		account.setEmail("1glyustb"+System.currentTimeMillis()+"@163.com");
+		Account account =accountService.getAccountByAccountId(newAccountId);
+		account.setEmail("xxx@sogou.com"+System.currentTimeMillis());
 		account.setPassword(""+System.currentTimeMillis());
 		account.setRegistDate(new Date());
 		 
-		accountService.update(account);
-		account = accountService.queryAccountByAccountId(newAccountId);
+		accountService.updateAccount(account);
+		account = accountService.getAccountByAccountId(newAccountId);
 		Assert.assertTrue(account!=null);
- 		Assert.assertTrue(account.getEmail().startsWith("1glyustb"));
+ 		Assert.assertTrue(account.getEmail().startsWith("xxx@sogou.com"));
   	}
 	
 	@Test
@@ -74,17 +74,17 @@ public class MasterSlaveMybatisAccountServiceTest extends AbstractJUnit4SpringCo
 		MybatisAccountService accountService = (MybatisAccountService)applicationContext.getBean("mybatisAccountService", MybatisAccountService.class);
 		
 		 
-		accountService.delete(newAccountId);
-		AccountForTest account = accountService.queryAccountByAccountId(newAccountId);
+		accountService.deleteAccount(newAccountId);
+		Account account = accountService.getAccountByAccountId(newAccountId);
 		Assert.assertTrue(account==null);
   	}
 	 
 	
-	public AccountForTest createAccount(){
-		AccountForTest account=new AccountForTest();
+	public Account createAccount(){
+		Account account=new Account();
  
 		account.setAccountId(new Random().nextInt(start)+100000000L);
-		account.setEmail("glyustb"+System.currentTimeMillis()+"@163.com"); 
+		account.setEmail("xxx"+System.currentTimeMillis()+"@sogou.com"); 
 		account.setPassword(""+System.currentTimeMillis());
 		account.setRegistDate(new Date());
 		 

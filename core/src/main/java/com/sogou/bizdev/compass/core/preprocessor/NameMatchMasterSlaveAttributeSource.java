@@ -13,8 +13,7 @@ import org.springframework.util.PatternMatchUtils;
 
 /** 
  * @Description: 根据方法名确定当前方法是去主库还是从库
- * @author zhangjuncheng@sogou-inc.com
- * @date 2014-5-7 下午4:39:15 
+ * @author zjc
  * @since 1.0.0 
  */
 public class NameMatchMasterSlaveAttributeSource implements

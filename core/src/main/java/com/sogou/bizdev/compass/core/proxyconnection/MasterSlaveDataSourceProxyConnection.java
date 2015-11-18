@@ -74,7 +74,7 @@ public class MasterSlaveDataSourceProxyConnection extends AbstractProxyConnectio
 	{
 		if(dataSource == null)
 		{
-			throw new IllegalStateException("masterSlaveDataSource:["+ this.masterSlaveDataSource.getId()+"],doGetConnection dataSource is null!");
+			return null;
 		}
 		if(!(dataSource instanceof SingleDataSource))
 		{

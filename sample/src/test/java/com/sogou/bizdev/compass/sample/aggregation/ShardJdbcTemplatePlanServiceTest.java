@@ -1,7 +1,6 @@
 package com.sogou.bizdev.compass.sample.aggregation;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -18,7 +17,7 @@ import com.sogou.bizdev.compass.sample.common.po.PlanCount;
 
 @ContextConfiguration(locations = { 
 		"classpath*:/conf/aggregation/test-aggregation-shardjdbctemplate.xml",
-		"classpath*:test-shard-*.xml" 
+		"classpath*:/datasource/shard/test-shard-*.xml" 
 	})
 @RunWith(BlockJUnit4ClassRunner.class)
 public class ShardJdbcTemplatePlanServiceTest  {
@@ -29,7 +28,7 @@ public class ShardJdbcTemplatePlanServiceTest  {
 	public void setUp() {
 		ApplicationContext ctx = new ClassPathXmlApplicationContext(new String[] {
 			"classpath*:/conf/aggregation/test-aggregation-shardjdbctemplate.xml",
-			"classpath*:test-shard-*.xml" 
+			"classpath*:/datasource/shard/test-shard-*.xml" 
 		});
 		
 		service = (ShardJdbcTemplatePlanService) ctx.getBean("planService");
@@ -96,7 +95,7 @@ public class ShardJdbcTemplatePlanServiceTest  {
 		List<PlanCount> planCountList = service.countPlanOfAccounts(this.getAccountIdsAsList());
 		
 		for (PlanCount planCount : planCountList) {
-			System.out.println("accountid=" + planCount.getAccountId() + " has cpcplanidCount=" + planCount.getPlanCount());
+			System.out.println("accountid=" + planCount.getAccountId() + " has planidCount=" + planCount.getPlanCount());
 		}
 	}
 	
@@ -105,7 +104,7 @@ public class ShardJdbcTemplatePlanServiceTest  {
 		List<PlanCount> planCountList = service.countAllPlanOfAccounts();
 		
 		for (PlanCount planCount : planCountList) {
-			System.out.println("accountid=" + planCount.getAccountId() + " has cpcplanidCount=" + planCount.getPlanCount());
+			System.out.println("accountid=" + planCount.getAccountId() + " has planidCount=" + planCount.getPlanCount());
 		}
 	}
 	
@@ -114,7 +113,7 @@ public class ShardJdbcTemplatePlanServiceTest  {
 		Long cpcplanId = 1773L;
 
 		Plan plan = service.queryPlanByPlanId(cpcplanId);
-		plan.setEndDate(new Date(System.currentTimeMillis()));
+		plan.setName(plan.getName()+System.currentTimeMillis());
 		
 		service.updatePlan(plan);
 	}
@@ -124,7 +123,7 @@ public class ShardJdbcTemplatePlanServiceTest  {
 		List<Plan> planList = service.queryPlansByAccountIds(this.getAccountIdsAsList());
 		
 		for (Plan plan : planList) {
-			plan.setEndDate(new Date(System.currentTimeMillis()));
+			plan.setName(plan.getName()+System.currentTimeMillis());
 		}
 		
 		service.updatePlans(planList);
