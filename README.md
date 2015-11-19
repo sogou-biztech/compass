@@ -20,7 +20,7 @@ Compass整体架构图如下所示：
 ![arch](https://github.com/sogou-biztech/compass/blob/master/arch.jpg "arch")
 
 ####数据源切换预处理器
-数据源切换预处理器提供了与Spring AOP的集成，通过拦截器的方式收集数据源切换所需的对象RouteContext，RouteContext包括分库路由键，主从库读写模式(决定本次访问应该读取主库还是从库)、service方法名、主从库延时键。RouteContext会保存到当前线程的threadlocal之中，供下层组件使用，并且会在业务调用全部结束之后对当前线程的threadLocal之中的RouteContext进行清理。每个数据源需要配置单独的数据源切换预处理器。
+数据源切换预处理器提供了与Spring AOP的集成，通过拦截器的方式收集数据源切换所需的信息并保存到对象RouteContext之中，RouteContext包括分库路由键，主从库读写模式(决定本次访问应该读取主库还是从库)、service方法名、主从库反延时键。RouteContext会保存到当前线程的threadlocal之中，供下层组件使用，并且会在业务调用全部结束之后对当前线程的threadLocal之中的RouteContext进行清理。每个数据源需要配置单独的数据源切换预处理器。
 
 ####数据聚合层和JDBC封装层
 在指定多个路由键以及不指定路由键的情况下提供有限程度的全库扫描、多库聚合和排序支持。
