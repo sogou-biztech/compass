@@ -29,6 +29,7 @@ Compass整体架构图如下所示：
 对JDBC规范的DataSource、Connection、Statement等接口进行代理，分为单库数据源SingleDataSource、主从数据源MasterSlaveDataSource和分库数据源ShardDataSource这3种数据源，其中MasterSlaveDataSource包含一个或多个SingleDataSource，ShardDataSource包含一个或多个MasterSlaveDataSource，MasterSlaveDataSource根据数据源切换预处理器设置的信息实现主从库选择、故障探测和HA等功能。ShardDataSource则根据据数据源切换预处理器设置的信息实现分库和分表路由、Sql解析和表名替换等功能。
 
 
+##框架工作流程
+Compass框架工作流程如下图所示：
 
-
-
+![flow](https://github.com/sogou-biztech/compass/blob/master/flow.jpg "flow")
