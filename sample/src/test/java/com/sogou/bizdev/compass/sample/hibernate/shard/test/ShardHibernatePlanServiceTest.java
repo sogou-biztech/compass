@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import com.sogou.bizdev.compass.sample.common.po.Plan;
 import com.sogou.bizdev.compass.sample.hibernate.shard.service.ShardHibernatePlanService;
 
-@ContextConfiguration(locations = {"classpath*:/conf/hibernate/test-shard-*.xml","classpath*:/datasource/shard/test-shard-*.xml"})
+@ContextConfiguration(locations = {"classpath*:/conf/hibernate/test-masterslave-*.xml","classpath*:/datasource/masterslave/test-masterslave-*.xml","classpath*:/conf/hibernate/test-shard-*.xml","classpath*:/datasource/shard/test-shard-*.xml"})
 public class ShardHibernatePlanServiceTest extends AbstractJUnit4SpringContextTests {
 	
 	private  final static Long ACCOUNTID=428937L;

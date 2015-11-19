@@ -1,6 +1,7 @@
 package com.sogou.bizdev.compass.sample.hibernate.masterslave.test;
 
 import java.util.Date;
+import java.util.Random;
 
 import junit.framework.Assert;
 
@@ -9,35 +10,43 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import com.sogou.bizdev.compass.sample.common.po.Account;
+import com.sogou.bizdev.compass.sample.common.po.Plan;
 import com.sogou.bizdev.compass.sample.hibernate.masterslave.service.HibernateAccountService;
 
-@ContextConfiguration(locations = { "classpath*:/conf/hibernate/test-masterslave-*.xml","classpath*:/datasource/masterslave/test-masterslave-*.xml" })
+@ContextConfiguration(locations = { "classpath*:/conf/hibernate/test-masterslave-*.xml","classpath*:/datasource/masterslave/test-masterslave-*.xml","classpath*:/conf/hibernate/test-shard-*.xml","classpath*:/datasource/shard/test-shard-*.xml"  })
 public class HibernateAccountServiceTest extends AbstractJUnit4SpringContextTests {
-    
-	@Test
-	public void testGetAccountById() {
-		HibernateAccountService accountService = (HibernateAccountService)applicationContext.getBean("hibernateAccountService");
-		Account accountForTest = accountService.getAccountById(375832L);
-		Assert.assertNotNull(accountForTest);
-		Assert.assertEquals(accountForTest.getEmail(), "xxx@sogou.com");
-		System.out.println(accountForTest);
-	}
+	private static Long newAccountId=null;
+	private final static Integer start=65535;
 	
 	@Test
 	public void testInsert() {
 		HibernateAccountService accountService = (HibernateAccountService)applicationContext.getBean("hibernateAccountService");
-		Account accountForTest = new Account();
-		accountForTest.setAccountId(99999999L);
-		accountForTest.setEmail("xxx@sogou.com");
-		accountForTest.setPassword("xxxxxxx");
-		accountForTest.setRegistDate(new Date());
-		accountService.createAccount(accountForTest);
+		Account account = createAccount();
+		accountService.createAccount(account);
 		
-		Account accountForTest1 = accountService.getAccountById(99999999L);
-		accountForTest1 = accountService.getAccountById(99999999L);
-		accountForTest1 = accountService.getAccountById(99999999L);
-		accountForTest1 = accountService.getAccountById(99999999L);
-		System.out.println(accountForTest1);
+		
+		Account account2 = accountService.getAccountById(account.getAccountId());
+		newAccountId=account.getAccountId();
+		Assert.assertTrue(account2!=null); 
+	}
+	
+	@Test
+	public void testGetAccountById() {
+		HibernateAccountService accountService = (HibernateAccountService)applicationContext.getBean("hibernateAccountService");
+		Account account = accountService.getAccountById(newAccountId);
+		Assert.assertNotNull(account);
+		Assert.assertEquals(account.getEmail(), "xxx@sogou.com");
+	}
+	
+	public Account createAccount(){
+		Account account=new Account();
+		account.setAccountId(new Random().nextInt(start)+100000000L);
+
+		account.setEmail("xxx@sogou.com");
+		account.setPassword("xxxxxx");
+		account.setRegistDate(new Date()); 
+		return account;
+		
 	}
 
 }

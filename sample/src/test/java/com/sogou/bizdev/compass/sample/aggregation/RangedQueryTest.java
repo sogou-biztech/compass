@@ -32,9 +32,9 @@ public class RangedQueryTest extends AbstractJUnit4SpringContextTests {
 	private ShardJdbcTemplate shardJdbcTemplate;
 	
 	// 需要使用ShardJdbcTemplate.RANGE_PLACEHOLDER替换掉sql的in语句中的?
-	private String sql = "select accountid, cpcplanid, name from cpcplan where"
-							+ " createdate > ?"
-							+ " and accountid in (" + ShardJdbcTemplate.RANGE_PLACEHOLDER + ")"
+	private String sql = "select accountid, planid, name from plan where"
+							+ " accountid in (" + ShardJdbcTemplate.RANGE_PLACEHOLDER + ")"
+							+ " and createdate > ?"
 							+ " and createdate < ?";
 	private String startDate = "2012-07-01";
 	private String endDate = "2013-07-01";
@@ -63,7 +63,7 @@ public class RangedQueryTest extends AbstractJUnit4SpringContextTests {
 	 */
 	@Test
 	public void sample2() {
-		Object[] args = new Object[] { startDate, this.getAccountIds(), endDate };
+		Object[] args = new Object[] { this.getAccountIds(), startDate, endDate };
 		
 		List<Map<String, Object>> resultList = shardJdbcTemplate.query(sql, args);
 		
@@ -78,7 +78,7 @@ public class RangedQueryTest extends AbstractJUnit4SpringContextTests {
 	 */
 	@Test
 	public void sample3() {
-		Object[] args = new Object[] { startDate, this.getAccountIdsAsList(), endDate };
+		Object[] args = new Object[] { this.getAccountIdsAsList(),startDate,  endDate };
 		
 		List<Map<String, Object>> resultList = shardJdbcTemplate.query(sql, args);
 		
@@ -98,11 +98,11 @@ public class RangedQueryTest extends AbstractJUnit4SpringContextTests {
 		// 指定范围查询除需要用RANGE_PLACEHOLDER替换掉sql的in语句中的?以外，并无特殊
 		// 因此同样可以与聚合描述器结合
 		AggregationDescriptor descriptor = new AggregationDescriptor()
-						.count("cpcplanid", "planidCount")
+						.count("planid", "planidCount")
 						.groupBy("accountid")
 						.orderBy("accountid", true);
 		
-		Object[] args = new Object[] { startDate, this.getAccountIdsAsList(), endDate };
+		Object[] args = new Object[] { this.getAccountIdsAsList(), startDate, endDate };
 		
 		List<Map<String, Object>> resultList = shardJdbcTemplate.query(sql, args, descriptor);
 		
