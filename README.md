@@ -20,7 +20,7 @@ Compass整体架构图如下所示：
 ![arch](https://github.com/sogou-biztech/compass/blob/master/arch.jpg "arch")
 
 ####数据源切换预处理器
-数据源切换预处理器提供了与Spring AOP的集成，通过拦截器的方式收集数据源切换所需的信息并保存到对象RouteContext之中，RouteContext包括分库路由键，主从库读写模式(决定本次访问应该读取主库还是从库)、service方法名、主从库反延时键。RouteContext会保存到当前线程的threadlocal之中，供下层组件使用，并且会在业务调用全部结束之后对当前线程的threadLocal之中的RouteContext进行清理。每个数据源需要配置单独的数据源切换预处理器。
+数据源切换预处理器提供了与Spring AOP的集成，通过拦截器的方式收集数据源切换所需的信息并保存到对象RouteContext之中，RouteContext包括分库路由键，主从库读写策略(决定本次访问应该读取主库还是从库)、service方法名、主从库反延时键。RouteContext会保存到当前线程的threadlocal之中，供下层组件使用，并且会在业务调用全部结束之后对当前线程的threadLocal之中的RouteContext进行清理。每个数据源需要配置单独的数据源切换预处理器，同时数据源切换预处理器需要配置在Spring的数据库事务拦截器之前。
 
 ####数据聚合层和JDBC封装层
 在指定多个路由键以及不指定路由键的情况下提供有限程度的全库扫描、多库聚合和排序支持。
@@ -33,3 +33,14 @@ Compass整体架构图如下所示：
 Compass框架工作流程如下图所示：
 
 ![flow](https://github.com/sogou-biztech/compass/blob/master/flow.jpg "flow")
+
+1. 上层应用(比如Action层)对Service层的调用会被数据源切换预处理器所拦截，数据源切换预处理器收集分库路由键，主从库读写策略(决定本次访问应该读取主库还是从库)、service方法名、主从库反延时保存在threadLocal里面的RouteContext对象中，供后续步骤使用。
+
+2. Service层调用Dao层的方法执行实际的数据库操作的时候，会通过Spring JdbcTemplate、MyBatis和Hibernate等数据访问层框架调用到Compass之中实现了JDBC规范的DataSource接口的ShardDataSource。
+
+3. ShardDataSource根据保存在threadLocal中的RouteContext里面的分区路由键和用户配置的路由策略进行路由，定位出当前的操作应该路由到哪个分库的哪个分表上，路由结果的唯一标识在代码中用TableContext表示。分库在Compass之中由实现了JDBC规范的DataSource接口的MasterSlaveDataSource表示。注意如果在分库之后再进一步进行了分表的话，需要同时对这次操作涉及的SQL语句进行解析，根据路由结果标识TableContext将SQL语句中的逻辑表名替换为实际的物理分表的表名，拿用户账号表acount举例，如果用户输入的SQL语句为select * from account，同时定位到这个SQL应该路由到1号库的第8张分表，那么改写之后的SQL语句可能为select * from account_01_08。
+
+4. ShardDataSource路由到某个分库MasterSlaveDataSource之后,MasterSlaveDataSource会进一步根据保存在threadLocal中的RouteContext里面的用户配置的读写策略和主从库反延时策略来进行主从选择。如果选择读取从库，那么需要进一步根据用户配置的负载均衡策略在多个从库之间进行负载均衡，同时如果用从库出现故障还需要及时探测到进行HA，MasterSlaveDataSource最终会选择出一个单库数据源SingleDataSource。
+
+5. SingleDataSource同样实现了JDBC规范的DataSource接口，只是实际的连接池数据源(比如DBCP、C3P0等)的简单封装，SingleDataSource会将操作都委托给的连接池数据源进行实际的数据库访问。
+
