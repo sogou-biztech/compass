@@ -34,6 +34,8 @@
 	<!-- 使用反延时的RoutingInteceptor,需要缓存支持 -->
 	<bean id="masterslaveRoutingInterceptor" class="com.sogou.bizdev.compass.delayfree.preprocessor.DelayFreeRoutingInterceptor">
 		<property name="dataSourceId" value="masterslaveDataSource"></property>
+		<!--  如果要走反延时，必须设置该参数，否则只能手动在参数中加上@ AntiDelayKey注解-->
+		<property name="useFirstArgumentAsRouteKey" value="true"></property>
 		<property name="masterSlaveAttributes">
 			<props>
 				<prop key="create*">MASTER</prop>
@@ -54,7 +56,7 @@
 		<property name="mycache" ref="myMemCache"></property>
 	</bean>
 		
-	<bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean" />
+	<!-- <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean" /> -->
 	
 	<bean id="myMemCache" class="com.sogou.bizdev.compass.delayfree.cache.memcache.MyMemCache">
 		<property name="hostAndPort" value="${memcache.host_port}"></property>

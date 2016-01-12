@@ -147,12 +147,6 @@
 
 			<!--database -->
 			<dependency>
-				<groupId>com.oracle</groupId>
-				<artifactId>ojdbc14</artifactId>
-				<version>1.4.2_08</version>
-				<optional>true</optional>
-			</dependency>
-			<dependency>
 				<groupId>mysql</groupId>
 				<artifactId>mysql-connector-java</artifactId>
 				<version>5.1.23</version>

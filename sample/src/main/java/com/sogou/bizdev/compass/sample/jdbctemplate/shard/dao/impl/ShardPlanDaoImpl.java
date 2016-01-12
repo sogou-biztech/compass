@@ -6,9 +6,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.util.CollectionUtils;
 
 import com.sogou.bizdev.compass.sample.common.po.Plan;
 import com.sogou.bizdev.compass.sample.jdbctemplate.shard.dao.ShardPlanDao;
@@ -94,7 +95,7 @@ public class ShardPlanDaoImpl implements ShardPlanDao {
 			
 		});
 				
-		return CollectionUtils.isNotEmpty(plans) ? plans.get(0) : null;
+		return CollectionUtils.isEmpty(plans) ? null:plans.get(0);
 	}
 
 	
