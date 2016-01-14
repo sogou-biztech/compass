@@ -44,5 +44,3 @@ Compass框架工作流程如下图所示：
 
 5. SingleDataSource只是对实际的连接池数据源(比如DBCP、C3P0等)的简单封装，SingleDataSource会将操作都委托给连接池数据源进行实际的数据库访问。
 
-##JDK版本支持
-Compass支持JDK1.6以及以上的版本。
