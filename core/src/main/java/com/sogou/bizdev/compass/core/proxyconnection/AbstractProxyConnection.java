@@ -17,12 +17,13 @@ import java.sql.Statement;
 import java.sql.Struct;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.Executor;
 
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
-
 import com.sogou.bizdev.compass.core.exception.TargetDataSourceNotFoundException;
+import com.sogou.bizdev.compass.core.util.JdbcMethodUtils;
 
 /**
  * @Description: 代理connection，执行sql 替换
@@ -73,7 +74,7 @@ public abstract class AbstractProxyConnection implements Connection
 	 * @return
 	 * @throws SQLException
 	 */
-	public Connection getPhysicalOrRandomConnection() throws SQLException
+	protected Connection getPhysicalOrRandomConnection() throws SQLException
 	{
 		Connection physicalConnectionToUse=this.doGetOrCreatePhysicalConnection();
 		if(physicalConnectionToUse!=null)
@@ -502,6 +503,31 @@ public abstract class AbstractProxyConnection implements Connection
 		}
 		return getOrCreatePhysicalConnection().createStruct(typeName, attributes);
 	}
+	
+	
+	//---------------------------------------------------------------------
+	// Implementation of JDBC 4.1's method
+	//---------------------------------------------------------------------
+	//@Override
+	public void setSchema(String schema) throws SQLException 
+	{
+		if(this.useRandomConnection)
+		{
+			throw new TargetDataSourceNotFoundException("setSchema error,"+this.getTargetDataSourceNotFoundExceptionErrorMsg());
+		}		
+		JdbcMethodUtils.invokeJdbcMethod(Connection.class,"setSchema",new Class<?>[]{String.class},getOrCreatePhysicalConnection(),new Object[]{schema});
+	}
+
+	//@Override
+	public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException 
+	{
+		if(this.useRandomConnection)
+		{
+			throw new TargetDataSourceNotFoundException("setNetworkTimeout error,"+this.getTargetDataSourceNotFoundExceptionErrorMsg());
+		}
+		JdbcMethodUtils.invokeJdbcMethod(Connection.class,"setNetworkTimeout",new Class<?>[]{Executor.class,int.class},getOrCreatePhysicalConnection(),new Object[]{executor,milliseconds});
+		
+	}
 
 	
 	
@@ -615,8 +641,23 @@ public abstract class AbstractProxyConnection implements Connection
 		return getPhysicalOrRandomConnection().getClientInfo();
 	}
 
-	
-	
-	
+	//---------------------------------------------------------------------
+	// Implementation of JDBC 4.1's method
+	//---------------------------------------------------------------------
+	//@Override
+	public String getSchema() throws SQLException 
+	{
+		return (String)JdbcMethodUtils.invokeJdbcMethod(Connection.class,"getSchema",new Class<?>[0],getPhysicalOrRandomConnection(),new Object[0]);
+	}
+	//@Override
+	public void abort(Executor executor) throws SQLException 
+	{
+		JdbcMethodUtils.invokeJdbcMethod(Connection.class,"abort",new Class<?>[]{Executor.class},getPhysicalOrRandomConnection(),new Object[]{executor});	
+	}
+	//@Override
+	public int getNetworkTimeout() throws SQLException 
+	{
+		return (Integer)JdbcMethodUtils.invokeJdbcMethod(Connection.class,"getNetworkTimeout",new Class<?>[0],getPhysicalOrRandomConnection(),new Class<?>[0]);
+	}
    
 }

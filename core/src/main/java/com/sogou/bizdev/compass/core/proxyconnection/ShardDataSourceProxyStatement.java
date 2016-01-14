@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 
+import com.sogou.bizdev.compass.core.util.JdbcMethodUtils;
+
 /**
  * @Description: 代理statement，执行sql替换
  * @author zjc
@@ -283,5 +285,18 @@ public class ShardDataSourceProxyStatement implements Statement
 	{
 		return this.shardProxyConnection.interceptSql(sql);
 	}
-
+	
+	//---------------------------------------------------------------------
+	// Implementation of JDBC 4.1's method
+	//---------------------------------------------------------------------
+	//@Override
+	public void closeOnCompletion() throws SQLException 
+	{
+		JdbcMethodUtils.invokeJdbcMethod(Statement.class,"closeOnCompletion",new Class<?>[0],targetStatement,new Object[0]);
+	}
+	//@Override
+	public boolean isCloseOnCompletion() throws SQLException 
+	{
+		return (Boolean)JdbcMethodUtils.invokeJdbcMethod(Statement.class,"isCloseOnCompletion",new Class<?>[0],targetStatement,new Object[0]);
+	}
 }

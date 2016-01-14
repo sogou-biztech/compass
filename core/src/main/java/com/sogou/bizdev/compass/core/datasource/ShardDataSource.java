@@ -27,7 +27,7 @@ import com.sogou.bizdev.compass.core.sqlinterceptor.SqlInterceptor;
  * @author gly
  * @since 1.0.0
  */
-public class ShardDataSource extends ComplexDataSource implements InitializingBean
+public class ShardDataSource extends AbstractDataSource implements InitializingBean
 {
 	
 	private static Logger logger = LoggerFactory.getLogger(ShardDataSource.class);  

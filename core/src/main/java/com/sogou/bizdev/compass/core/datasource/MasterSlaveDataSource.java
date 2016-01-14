@@ -31,7 +31,7 @@ import org.springframework.util.StringUtils;
  * @author gly
  * @since 1.0.0
  */
-public class MasterSlaveDataSource extends ComplexDataSource implements InitializingBean
+public class MasterSlaveDataSource extends AbstractDataSource implements InitializingBean
 {
 	private static Logger logger = LoggerFactory.getLogger(MasterSlaveDataSource.class);  
 
