@@ -46,7 +46,7 @@ Compass框架工作流程如下图所示：
 
 
 ##SQL语法支持
-对于分库分表的时候需要对SQL语句中的数据表名进行修改的情况，Compass采用开源项目JSqlParser(https://github.com/JSQLParser/JSqlParser)进行SQL解析并进行表名修改，目前采用的JSqlParser版本是0.9.4。
+对于分库分表的时候需要对SQL语句中的数据表名进行修改的情况，Compass采用开源项目[JSqlParser](https://github.com/JSQLParser/JSqlParser)进行SQL解析并进行表名修改，目前采用的JSqlParser版本是0.9.4。
 
 
 ##JDK版本支持
