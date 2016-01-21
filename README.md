@@ -44,5 +44,10 @@ Compass框架工作流程如下图所示：
 
 5. SingleDataSource只是对实际的连接池数据源(比如DBCP、C3P0等)的简单封装，SingleDataSource会将操作都委托给连接池数据源进行实际的数据库访问。
 
+
+##SQL语法支持
+对于分库分表的时候需要对SQL语句中的数据表名进行修改的情况，Compass采用开源项目JSqlParser(https://github.com/JSQLParser/JSqlParser)进行SQL解析并进行表名修改，目前采用的JSqlParser版本是0.9.4。
+
+
 ##JDK版本支持
 Compass支持JDK1.6以及以上的版本。
