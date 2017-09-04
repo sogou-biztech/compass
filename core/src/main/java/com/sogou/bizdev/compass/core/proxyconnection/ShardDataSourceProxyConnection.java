@@ -172,14 +172,16 @@ public class ShardDataSourceProxyConnection extends AbstractProxyConnection
 	}
 
 	
- 	public MasterSlaveDataSource selectRandomMasterSlaveDataSource(Map<String, MasterSlaveDataSource> targets) {
-        if (targets == null||targets.isEmpty()) {
-            return null;
-        }
-        Collection<MasterSlaveDataSource> dataSources=targets.values();
-        MasterSlaveDataSource[] dataSourcesArray=dataSources.toArray(new MasterSlaveDataSource[dataSources.size()]);
-        return dataSourcesArray[random.nextInt(dataSourcesArray.length)];
+ 	public MasterSlaveDataSource selectRandomMasterSlaveDataSource(Map<String, MasterSlaveDataSource> targets) 
+ 	{
+    if (targets == null||targets.isEmpty()) 
+    {
+        return null;
     }
+    Collection<MasterSlaveDataSource> dataSources=targets.values();
+    MasterSlaveDataSource[] dataSourcesArray=dataSources.toArray(new MasterSlaveDataSource[dataSources.size()]);
+    return dataSourcesArray[random.nextInt(dataSourcesArray.length)];
+  }
  	
  	
  	public String interceptSql(String sql)
