@@ -11,7 +11,7 @@ Compass分为4个子模块：
    * compass-core： Compass框架最核心的功能模块，提供指定路由键(RouteKey)的情况下的分布式数据库访问。
    * compass-delayfree：提供主从反延迟的策略的集成，如果不使用该功能可以不依赖。
    * compass-aggregation：提供有限程度的全库扫描、多库聚合和排序支持，如果不使用聚合功能可以不依赖。
-   * compass-sample:提供配置和代码编写范例。
+   * compass-sample:提供配置和代码编写范例的集合。
 
    
 ##整体架构
