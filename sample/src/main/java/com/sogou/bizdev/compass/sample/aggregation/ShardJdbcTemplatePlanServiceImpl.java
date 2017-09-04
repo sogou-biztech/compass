@@ -47,6 +47,7 @@ public class ShardJdbcTemplatePlanServiceImpl implements ShardJdbcTemplatePlanSe
 		int originMaxRows = shardJdbcTemplate.getMaxRows();
 		try {
 			// pageCount起始值为0
+			//分页
 			int offset = pageCount * pageSize;
 			int rows = pageSize;
 			
