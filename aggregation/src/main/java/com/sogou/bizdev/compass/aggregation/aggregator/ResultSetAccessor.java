@@ -17,6 +17,7 @@ import com.sogou.bizdev.compass.aggregation.aggregator.collector.RowAccessor;
  *
  * @author yk
  * @since 1.0.0
+ *
  */
 public class ResultSetAccessor implements RowAccessor {
 

@@ -10,6 +10,7 @@ import java.util.Map;
  *
  * @author yanke@sogou-inc.com
  * @since 1.0.0
+ *
  */
 public interface AggregatedRowMapper<T> {
 	

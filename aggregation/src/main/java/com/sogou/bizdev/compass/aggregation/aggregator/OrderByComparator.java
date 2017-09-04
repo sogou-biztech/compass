@@ -11,6 +11,7 @@ import com.sogou.bizdev.compass.aggregation.util.ObjectComparator;
  *
  * @author yk
  * @since 1.0.0
+ *
  */
 public class OrderByComparator implements Comparator<Map<String, Object>> {
 
