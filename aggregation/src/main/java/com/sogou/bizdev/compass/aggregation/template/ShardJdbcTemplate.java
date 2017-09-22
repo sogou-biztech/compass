@@ -76,7 +76,7 @@ import com.sogou.bizdev.compass.core.router.TableContext;
  * 注1：只有用分表依据字段作为参数时，才支持形式2。对于非分表依据字段的批量操作，请使用形式1中的方式进行操作。
  * 
  * 
- * @author yk
+ * @author yk | kurtyan777@gmail.com
  * @since 1.0.0
  */
 public class ShardJdbcTemplate extends ShardJdbcConfig implements ShardJdbcOperations, InitializingBean, DisposableBean {
@@ -223,13 +223,12 @@ public class ShardJdbcTemplate extends ShardJdbcConfig implements ShardJdbcOpera
         return this.query(sql, args, new ColumnMapRowMapper());
     }
     
-    @SuppressWarnings("rawtypes")
 	@Override
-    public List query(String sql, Object[] args, final RowMapper rowMapper) {
+    public <T> List<T> query(String sql, Object[] args, final RowMapper<T> rowMapper) {
 		Assert.notNull(sql, "sql must not be null");
 		Assert.notNull(rowMapper, "rowMapper must not be null");
 
-        ShardOperationProcessor<List> processor = this.getNonAggregationProcessor(rowMapper);
+        ShardOperationProcessor<List<T>> processor = this.getNonAggregationProcessor(rowMapper);
         return this.process(sql, args, processor);
     }
 
@@ -259,23 +258,22 @@ public class ShardJdbcTemplate extends ShardJdbcConfig implements ShardJdbcOpera
         return processor;
     }
 
-    @SuppressWarnings("rawtypes")
-	private ShardOperationProcessor<List> getNonAggregationProcessor(final RowMapper rowMapper) {
-        final List<QueryCallable<List>> callableList = new ArrayList<ShardJdbcTemplate.QueryCallable<List>>();
+	private <T> ShardOperationProcessor<List<T>> getNonAggregationProcessor(final RowMapper<T> rowMapper) {
+        final List<QueryCallable<List<T>>> callableList = new ArrayList<ShardJdbcTemplate.QueryCallable<List<T>>>();
 
-        ShardOperationProcessor<List> processor = new ShardOperationProcessor<List>() {
+        ShardOperationProcessor<List<T>> processor = new ShardOperationProcessor<List<T>>() {
             @SuppressWarnings("unchecked")
 			@Override
             public void addOperation(Shard shard, String sql, Object[] args) {
                 ResultSetExtractor extractor = new RowMapperResultSetExtractor(rowMapper);
-                QueryCallable<List> callable = new QueryCallable<List>(shard, sql, args, extractor);
+                QueryCallable<List<T>> callable = new QueryCallable<List<T>>(shard, sql, args, extractor);
 
                 callableList.add(callable);
             }
 
 			@Override
-            public List processOperations() {
-                List<List> rawResultList = ShardJdbcTemplate.this.executeQuery(callableList);
+            public List<T> processOperations() {
+                List<List<T>> rawResultList = ShardJdbcTemplate.this.executeQuery(callableList);
                 return AggregationUtil.aggregateObjectList(rawResultList);
             }
         };
