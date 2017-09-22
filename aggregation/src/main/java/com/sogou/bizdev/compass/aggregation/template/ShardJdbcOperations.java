@@ -10,7 +10,7 @@ import com.sogou.bizdev.compass.aggregation.aggregator.AggregationDescriptor;
 
 /**
  * 此处定义了ShardJdbcTemplate支持的基本jdbc操作
- * @author yk
+ * @author yk | kurtyan777@gmail.com
  * @since 1.0.0
  */
 public interface ShardJdbcOperations {
@@ -55,7 +55,7 @@ public interface ShardJdbcOperations {
      * @param rowMapper
      * @return
      */
-    public List query(String sql, Object[] args, RowMapper rowMapper);
+    public <T> List<T> query(String sql, Object[] args, RowMapper<T> rowMapper);
 
     
     /**
