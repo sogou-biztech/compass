@@ -22,3 +22,6 @@ aggregation/target/
 sample/target/
 
 
+.git/
+.idea/
+*.iml
