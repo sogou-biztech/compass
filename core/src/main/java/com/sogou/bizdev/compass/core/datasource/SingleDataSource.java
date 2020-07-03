@@ -11,8 +11,8 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.StringUtils;
 
-import com.sogou.bizdev.compass.core.datasource.reteriver.DatabasePropertiesReteriver;
-import com.sogou.bizdev.compass.core.datasource.reteriver.DatabasePropertiesReteriverRegistry;
+import com.sogou.bizdev.compass.core.datasource.retriever.DatabasePropertiesRetriever;
+import com.sogou.bizdev.compass.core.datasource.retriever.DatabasePropertiesRetrieverRegistry;
 import com.sogou.bizdev.compass.core.datasource.statistic.DataSourceConnectionStatistic;
 import com.sogou.bizdev.compass.core.selector.loadbalance.Selectable;
 
@@ -98,34 +98,34 @@ public class SingleDataSource extends AbstractDataSource implements Selectable,I
 	@Override
 	public List<DataSourceConnectionStatistic> getDataSourceConnectionStatistics()
 	{
-		DatabasePropertiesReteriver dbReteriver = this.getDatabasePropertiesReteriver();
+		DatabasePropertiesRetriever dbRetriever = this.getDatabasePropertiesRetriever();
 		
-		return Collections.singletonList(dbReteriver.getDataSourceConnectionStatistic(this.getId(), this.targetDataSource));
+		return Collections.singletonList(dbRetriever.getDataSourceConnectionStatistic(this.getId(), this.targetDataSource));
 		
 	}
 	
-	public DatabasePropertiesReteriver getDatabasePropertiesReteriver()
+	public DatabasePropertiesRetriever getDatabasePropertiesRetriever()
 	{
-		DatabasePropertiesReteriver dbReteriver = DatabasePropertiesReteriverRegistry.get(this.targetDataSource.getClass());
-		if (dbReteriver==null) 
+		DatabasePropertiesRetriever dbRetriever = DatabasePropertiesRetrieverRegistry.get(this.targetDataSource.getClass());
+		if (dbRetriever==null)
 		{
-			throw new IllegalArgumentException("Unable to find DatabasePropertiesReteriver according to class:[ "+this.targetDataSource.getClass()+"]");
+			throw new IllegalArgumentException("Unable to find DatabasePropertiesRetriever according to class:[ "+this.targetDataSource.getClass()+"]");
 		}
 		
-		return dbReteriver;
+		return dbRetriever;
 	}
 	
 	public DatabaseType getDatabaseType()
 	{
-		DatabasePropertiesReteriver dbReteriver = this.getDatabasePropertiesReteriver();
-		return dbReteriver.getDatabaseType(this.targetDataSource);
+		DatabasePropertiesRetriever dbRetriever = this.getDatabasePropertiesRetriever();
+		return dbRetriever.getDatabaseType(this.targetDataSource);
 	}
 	
 	
 	public String getDatabaseUrl()
 	{
-		DatabasePropertiesReteriver dbReteriver = this.getDatabasePropertiesReteriver();
-		return dbReteriver.getDatabaseUrl(this.targetDataSource);
+		DatabasePropertiesRetriever dbRetriever = this.getDatabasePropertiesRetriever();
+		return dbRetriever.getDatabaseUrl(this.targetDataSource);
 	}
 	@Override
 	public void afterPropertiesSet() throws Exception 

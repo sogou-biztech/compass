@@ -17,9 +17,9 @@ import com.sogou.bizdev.compass.core.router.TableContext;
 public class ModSqlInterceptor extends RewriteTableNameSqlInterceptor implements InitializingBean
 {
 
-	private static final String DEAFULT_PATTERN = "_%02d%02d";
+	private static final String DEFAULT_PATTERN = "_%02d%02d";
 	
-	private String pattern = DEAFULT_PATTERN;
+	private String pattern = DEFAULT_PATTERN;
 	
 	@Override
 	public String rewrite(String oldTableName, TableContext tableContext)

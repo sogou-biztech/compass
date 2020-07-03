@@ -1,4 +1,4 @@
-package com.sogou.bizdev.compass.core.datasource.reteriver;
+package com.sogou.bizdev.compass.core.datasource.retriever;
 
 import javax.sql.DataSource;
 
@@ -18,9 +18,9 @@ import com.sogou.bizdev.compass.core.datasource.DatabaseType;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class DbcpDatabasePropertiesReteriver extends
-		DatabasePropertiesReteriver {
-	private static Logger logger = LoggerFactory.getLogger(DbcpDatabasePropertiesReteriver.class);  
+public class DbcpDatabasePropertiesRetriever extends
+    DatabasePropertiesRetriever {
+	private static Logger logger = LoggerFactory.getLogger(DbcpDatabasePropertiesRetriever.class);
 	
 	@Override
 	public String getDatabaseUrl(DataSource dataSource) {

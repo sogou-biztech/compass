@@ -1,4 +1,4 @@
-package com.sogou.bizdev.compass.core.datasource.reteriver;
+package com.sogou.bizdev.compass.core.datasource.retriever;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import com.sogou.bizdev.compass.core.datasource.statistic.DataSourceConnectionSt
  * @author gly
  * @since 1.0.0
  */
-public abstract class DatabasePropertiesReteriver {
+public abstract class DatabasePropertiesRetriever {
 	
 	protected static final int  IllegalNumber = -1;
 	protected static final int  UnliveNumber = 0;
