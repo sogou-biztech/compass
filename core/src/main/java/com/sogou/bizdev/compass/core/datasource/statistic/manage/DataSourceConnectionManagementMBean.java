@@ -6,13 +6,13 @@ import com.sogou.bizdev.compass.core.datasource.statistic.DataSourceConnectionSt
 
 /**
  * 数据源连接池监控JMX
- * 
+ *
  * @author gly
  * @version 1.0.0
  * @since 1.0.0
  */
 public interface DataSourceConnectionManagementMBean {
-	
-	public List<DataSourceConnectionStatistic> getDataSourceConnectionStatistics(String datasourceId);
- 
+
+    public List<DataSourceConnectionStatistic> getDataSourceConnectionStatistics(String datasourceId);
+
 }

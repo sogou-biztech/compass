@@ -12,152 +12,135 @@ import com.sogou.bizdev.compass.core.datasource.availability.DatabaseDetectingEv
 
 /**
  * 数据库探测器(含重试)
- * 
+ *
  * @author gly
  * @since 1.0.0
  */
-public abstract class AbstractDatabaseAliveTester implements DatabaseAliveTester
-{
-    private Logger logger = LoggerFactory.getLogger(getClass());  
-    
-	private static final int DEFAULT_RETRY_TIMES = 3;//默认retry次数为3次
+public abstract class AbstractDatabaseAliveTester implements DatabaseAliveTester {
 
-	private static final int DEFAULT_RETRY_INTERVALS = 1000; //默认每次探测失败后，线程Sleep1s
-	
-	private static final int DEFAULT_QUERY_TIME_OUT=5;//默认每次查询超时时间为5s
-	
-	/**
-	 * 心跳探测重试次数
-	 */
-	private int retryTimes = DEFAULT_RETRY_TIMES;
-	
-	/**
-	 * 心跳探测重试间隔
-	 */
-	private int retryIntervals = DEFAULT_RETRY_INTERVALS; 
-	
-	/**
-	 * 探测超时时间
-	 */
-	private int queryTimeOut=DEFAULT_QUERY_TIME_OUT;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	private ThreadLocal<Throwable> lastExceptionHolder = new ThreadLocal<Throwable>();
+    /**
+     * 默认retry次数为3次
+     */
+    private static final int DEFAULT_RETRY_TIMES = 3;
+    /**
+     * 默认每次探测失败后，线程sleep 1s
+     */
+    private static final int DEFAULT_RETRY_INTERVALS = 1000;
+    /**
+     * 默认每次查询超时时间为5s
+     */
+    private static final int DEFAULT_QUERY_TIME_OUT = 5;
 
-	protected abstract String getDefaultPingSql();
-	
-	@Override
-	public boolean isDatabaseAlive(DatabaseDetectingEvent event) {
-		int failTimes = 0;
-		int retryTimes = getRetryTimes();
-		int retryIntervals = getRetryIntervals();
-		while (failTimes<retryTimes) {
-			boolean alive = isAlive(event);
-			if (alive) {
-				if (failTimes>0 && logger.isDebugEnabled()) {
-					logger.debug("Retried '"+failTimes+"' times, last execption is "+lastExceptionHolder.get(), lastExceptionHolder.get());
-				}
-				return true;
-			} else {
-				failTimes++;
-				try {
-					Thread.sleep(retryIntervals);
-				} catch (InterruptedException e) {
-				}
-			}
-		}
-		logger.error("Data source '"+event.getDataSource().getId()+"' is unavailable, last execption is "+lastExceptionHolder.get(), lastExceptionHolder.get());
-		return false;
-	}
+    /**
+     * 心跳探测重试次数
+     */
+    private int retryTimes = DEFAULT_RETRY_TIMES;
 
-    protected boolean isAlive(DatabaseDetectingEvent event)
-    {
-    	Connection connection = null;
-    	PreparedStatement statement = null;
-		DataSource dataSource = event.getDataSource();
-		String pingSql = null;
-		try
-		{
-			connection = dataSource.getConnection();
-			pingSql = event.getPingSql();
-			if (pingSql == null)
-			{
-				pingSql = getDefaultPingSql();
-			}
-			statement = connection.prepareStatement(pingSql);
-			statement.setQueryTimeout(getQueryTimeOut());
-			statement.execute();
-			return true;
-		} 
-		catch (Throwable t) 
-		{
-			lastExceptionHolder.set(t);
-			if (logger.isDebugEnabled())
-			{
-				logger.debug("Database '"+event.getDataSource().getId()+"' is unavailable, execption is "+lastExceptionHolder.get(), t);
-			}
-			return handleException(t);
-		} 
-		finally 
-		{
+    /**
+     * 心跳探测重试间隔
+     */
+    private int retryIntervals = DEFAULT_RETRY_INTERVALS;
 
-			if (statement!=null)
-			{
-				try
-				{
-					statement.close();
-				}
-				catch(Throwable ex)
-				{
-                    logger.error("close statement error!", ex);
-				}
-			}
-			if ( connection != null) 
-			{
-				try
-				{
-					connection.close();
-				}
-				catch(Throwable ex)
-				{
-					logger.error("close connection error!", ex);
-				}
-			}
+    /**
+     * 探测超时时间
+     */
+    private int queryTimeOut = DEFAULT_QUERY_TIME_OUT;
 
-		}
-	}
+    private ThreadLocal<Throwable> lastExceptionHolder = new ThreadLocal<Throwable>();
 
-	protected boolean handleException(Throwable t)
-	{
-		return false;
-	}
+    protected abstract String getDefaultPingSql();
 
-    public int getRetryTimes()
-    {
-		return retryTimes;
-	}
+    @Override
+    public boolean isDatabaseAlive(DatabaseDetectingEvent event) {
+        int failTimes = 0;
+        int retryTimes = getRetryTimes();
+        int retryIntervals = getRetryIntervals();
+        while (failTimes < retryTimes) {
+            boolean alive = isAlive(event);
+            if (alive) {
+                if (failTimes > 0 && logger.isDebugEnabled()) {
+                    logger.debug("Retry '{}' times, last exception: ", failTimes, lastExceptionHolder.get());
+                }
+                return true;
+            } else {
+                failTimes++;
+                try {
+                    Thread.sleep(retryIntervals);
+                } catch (InterruptedException ignored) {
+                }
+            }
+        }
+        logger.error("Data source '{}' is unavailable, last exception: ", event.getDataSource().getId(),
+            lastExceptionHolder.get());
+        return false;
+    }
 
-	public void setRetryTimes(int retryTimes) 
-	{
-		this.retryTimes = retryTimes;
-	}
+    protected boolean isAlive(DatabaseDetectingEvent event) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        DataSource dataSource = event.getDataSource();
+        String pingSql = null;
+        try {
+            connection = dataSource.getConnection();
+            pingSql = event.getPingSql();
+            if (pingSql == null) {
+                pingSql = getDefaultPingSql();
+            }
+            statement = connection.prepareStatement(pingSql);
+            statement.setQueryTimeout(getQueryTimeOut());
+            statement.execute();
+            return true;
+        } catch (Throwable t) {
+            lastExceptionHolder.set(t);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Database '{}' is unavailable, exception: ", event.getDataSource().getId(), t);
+            }
+            return handleException(t);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (Throwable ex) {
+                    logger.error("close statement error", ex);
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (Throwable ex) {
+                    logger.error("close connection error", ex);
+                }
+            }
+        }
+    }
 
-	public int getRetryIntervals()
-	{
-		return retryIntervals;
-	}
+    protected boolean handleException(Throwable t) {
+        return false;
+    }
 
-	public void setRetryIntervals(int retryIntervals)
-	{
-		this.retryIntervals = retryIntervals;
-	}
+    public int getRetryTimes() {
+        return retryTimes;
+    }
 
-	public int getQueryTimeOut()
-	{
-		return queryTimeOut;
-	}
+    public void setRetryTimes(int retryTimes) {
+        this.retryTimes = retryTimes;
+    }
 
-	public void setQueryTimeOut(int queryTimeOut)
-	{
-		this.queryTimeOut = queryTimeOut;
-	}
+    public int getRetryIntervals() {
+        return retryIntervals;
+    }
+
+    public void setRetryIntervals(int retryIntervals) {
+        this.retryIntervals = retryIntervals;
+    }
+
+    public int getQueryTimeOut() {
+        return queryTimeOut;
+    }
+
+    public void setQueryTimeOut(int queryTimeOut) {
+        this.queryTimeOut = queryTimeOut;
+    }
 }

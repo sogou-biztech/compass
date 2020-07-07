@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sogou.bizdev.compass.core.preprocessor;
 
@@ -10,16 +10,17 @@ package com.sogou.bizdev.compass.core.preprocessor;
  */
 public enum MasterSlaveAttribute {
 
-	MASTER("MASTER"), SLAVE("SLAVE");
+    MASTER("MASTER"),
+    SLAVE("SLAVE");
 
-	String value;
+    String value;
 
-	private MasterSlaveAttribute(String value) {
-		this.value = value;
-	}
+    private MasterSlaveAttribute(String value) {
+        this.value = value;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getValue() {
+        return value;
+    }
 
 }
