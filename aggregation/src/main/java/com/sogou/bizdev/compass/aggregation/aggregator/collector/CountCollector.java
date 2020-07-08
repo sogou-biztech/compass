@@ -23,12 +23,12 @@ public class CountCollector extends AbstractColumnCollector {
             count++;
         }
     }
-    
-	@Override
-	public void merge(ColumnCollector collector) {
-		CountCollector countCollector = super.transform(collector);
-		count += countCollector.count;
-	}
+
+    @Override
+    public void merge(ColumnCollector collector) {
+        CountCollector countCollector = super.transform(collector);
+        count += countCollector.count;
+    }
 
     @Override
     public Integer getCollectedValue() {

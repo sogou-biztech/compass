@@ -16,16 +16,16 @@ public class MaxCollector extends AbstractColumnCollector {
     public MaxCollector(String collectingField) {
         super(collectingField);
     }
-    
+
     private void compareAndSet(Object value) {
-    	if (value == null) {
-    		return;
-    	}
+        if (value == null) {
+            return;
+        }
 
         if (max == null || comparator.compare(max, value) < 0) {
-        	max = value;
+            max = value;
         }
-        
+
     }
 
     @Override
@@ -33,16 +33,16 @@ public class MaxCollector extends AbstractColumnCollector {
         Object value = row.getFieldValue(getCollectingField());
         this.compareAndSet(value);
     }
-    
-	@Override
-	public void merge(ColumnCollector collector) {
-		MaxCollector maxCollector = super.transform(collector);
-		this.compareAndSet(maxCollector.max);
-	}
+
+    @Override
+    public void merge(ColumnCollector collector) {
+        MaxCollector maxCollector = super.transform(collector);
+        this.compareAndSet(maxCollector.max);
+    }
 
     @Override
     public Object getCollectedValue() {
-		return max;
-	}
+        return max;
+    }
 
 }

@@ -12,7 +12,7 @@ import com.sogou.bizdev.compass.aggregation.util.NumberUtil;
  * @since 1.0.0
  */
 public class AvgCollector extends AbstractColumnCollector {
-	
+
     private SumCollector sumCollector = new SumCollector(getCollectingField());
     private CountCollector countCollector = new CountCollector(getCollectingField());
 
@@ -22,21 +22,21 @@ public class AvgCollector extends AbstractColumnCollector {
 
     @Override
     public void collect(RowAccessor row) {
-    	sumCollector.collect(row);
-    	countCollector.collect(row);
+        sumCollector.collect(row);
+        countCollector.collect(row);
     }
-    
-	@Override
-	public void merge(ColumnCollector collector) {
-		AvgCollector avgCollector = super.transform(collector);
-		
-		sumCollector.merge(avgCollector.sumCollector);
-		countCollector.merge(avgCollector.countCollector);
-	}
+
+    @Override
+    public void merge(ColumnCollector collector) {
+        AvgCollector avgCollector = super.transform(collector);
+
+        sumCollector.merge(avgCollector.sumCollector);
+        countCollector.merge(avgCollector.countCollector);
+    }
 
     @Override
     public Number getCollectedValue() {
-    	Integer count = countCollector.getCollectedValue();
+        Integer count = countCollector.getCollectedValue();
         if (count == 0) {
             return null;
         } else {
@@ -48,8 +48,7 @@ public class AvgCollector extends AbstractColumnCollector {
                 BigDecimal n1 = NumberUtil.convert(BigDecimal.class, sum);
                 BigDecimal n2 = NumberUtil.convert(BigDecimal.class, Integer.valueOf(count));
 
-                BigDecimal avg = n1.divide(n2, BigDecimal.ROUND_HALF_UP);
-               	return avg;
+                return n1.divide(n2, BigDecimal.ROUND_HALF_UP);
             }
         }
     }

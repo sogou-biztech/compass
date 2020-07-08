@@ -12,8 +12,8 @@ import java.util.Comparator;
  */
 public class ObjectComparator implements Comparator<Object> {
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
     public int compare(Object o1, Object o2) {
         if (o1 == null && o2 == null) {
             return 0;
@@ -33,5 +33,5 @@ public class ObjectComparator implements Comparator<Object> {
 
         throw new IllegalArgumentException("neither o1 nor o2 supports the Comparable operation");
     }
-    
+
 }

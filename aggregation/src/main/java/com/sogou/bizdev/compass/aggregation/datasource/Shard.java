@@ -11,52 +11,46 @@ import com.sogou.bizdev.compass.core.router.TableContext;
 
 /**
  * 分表信息，保存了主从数据源、目标物理数据源、分库分表信息（TableContext）
+ *
  * @author yk
  * @since 1.0.0
  */
-public class Shard 
-{
+public class Shard {
 
     private DataSource targetDataSource;
     private TableContext tableContext;
-    private List<Object> routeKeys=null;
-    
-    
-    public Shard(DataSource targetDataSource, TableContext tableContext)
-	{
-		this.targetDataSource = targetDataSource;
-		this.tableContext = tableContext;
-	}
+    private List<Object> routeKeys = null;
 
-	public DataSource getTargetDataSource() {
-		return targetDataSource;
-	}
+    public Shard(DataSource targetDataSource, TableContext tableContext) {
+        this.targetDataSource = targetDataSource;
+        this.tableContext = tableContext;
+    }
 
-	public void setTargetDataSource(DataSource targetDataSource) {
-		this.targetDataSource = targetDataSource;
-	}
+    public DataSource getTargetDataSource() {
+        return targetDataSource;
+    }
 
-	public TableContext getTableContext() {
-		return tableContext;
-	}
+    public void setTargetDataSource(DataSource targetDataSource) {
+        this.targetDataSource = targetDataSource;
+    }
 
-	public void setTableContext(TableContext tableContext) {
-		this.tableContext = tableContext;
-	}
+    public TableContext getTableContext() {
+        return tableContext;
+    }
 
-	public List<Object> getRouteKeys() {
-		return routeKeys;
-	}
+    public void setTableContext(TableContext tableContext) {
+        this.tableContext = tableContext;
+    }
 
-	public void addRouteKey(Object routeKey) 
-	{
-		if(CollectionUtils.isEmpty(this.routeKeys))
-		{
-			this.routeKeys=new LinkedList<Object>();
-		}
-		this.routeKeys.add(routeKey);
-	}
+    public List<Object> getRouteKeys() {
+        return routeKeys;
+    }
 
-    
+    public void addRouteKey(Object routeKey) {
+        if (CollectionUtils.isEmpty(this.routeKeys)) {
+            this.routeKeys = new LinkedList<Object>();
+        }
+        this.routeKeys.add(routeKey);
+    }
 
 }

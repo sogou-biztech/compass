@@ -16,14 +16,13 @@ public class MinCollector extends AbstractColumnCollector {
     public MinCollector(String collectingField) {
         super(collectingField);
     }
-    
+
     private void compareAndSet(Object value) {
         if (value != null) {
-        	
-        	// 关于 min == null 的注释：
-        	// 在sql中，null并不参与min的计算，min值一定是非null值
+            // 关于 min == null 的注释：
+            // 在sql中，null并不参与min的计算，min值一定是非null值
             // 因此min为null时也为其设置value
-            if (min == null	 || comparator.compare(min, value) > 0) {
+            if (min == null || comparator.compare(min, value) > 0) {
                 min = value;
             }
         }
@@ -34,12 +33,12 @@ public class MinCollector extends AbstractColumnCollector {
         Object value = row.getFieldValue(getCollectingField());
         this.compareAndSet(value);
     }
-    
-	@Override
-	public void merge(ColumnCollector collector) {
-		MinCollector minCollector = super.transform(collector);
-		this.compareAndSet(minCollector.min);
-	}
+
+    @Override
+    public void merge(ColumnCollector collector) {
+        MinCollector minCollector = super.transform(collector);
+        this.compareAndSet(minCollector.min);
+    }
 
     @Override
     public Object getCollectedValue() {

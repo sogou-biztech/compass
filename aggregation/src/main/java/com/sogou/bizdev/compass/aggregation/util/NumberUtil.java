@@ -5,6 +5,7 @@ import java.math.BigInteger;
 
 /**
  * 提供数值相关的基本操作，主要用于聚合函数计算
+ *
  * @author yk
  * @version 1.0.0
  * @since 1.0.0
@@ -24,7 +25,7 @@ public class NumberUtil {
         if (!n1.getClass().equals(n2.getClass())) {
             throw new IllegalArgumentException();
         }
-        
+
         if (isDecimal(n1)) {
             BigDecimal bdn1 = convert(BigDecimal.class, n1);
             BigDecimal bdn2 = convert(BigDecimal.class, n2);
@@ -35,26 +36,26 @@ public class NumberUtil {
             return convert(n1.getClass(), bin1.add(bin2));
         }
     }
-    
+
     private static boolean isDecimal(Number number) {
-    	if (number instanceof Float
-    			|| number instanceof Double 
-    			|| number instanceof BigDecimal) {
-    		return true;
-    	}
-    	if (number instanceof Byte
-    			|| number instanceof Short
-    			|| number instanceof Integer
-    			|| number instanceof Long
-    			|| number instanceof BigInteger) {
-    		return false;
-    	}
-    	
-    	throw new IllegalArgumentException("unsupported number type=" + number.getClass());
+        if (number instanceof Float
+            || number instanceof Double
+            || number instanceof BigDecimal) {
+            return true;
+        }
+        if (number instanceof Byte
+            || number instanceof Short
+            || number instanceof Integer
+            || number instanceof Long
+            || number instanceof BigInteger) {
+            return false;
+        }
+
+        throw new IllegalArgumentException("unsupported number type=" + number.getClass());
     }
 
     @SuppressWarnings("unchecked")
-	public static <T extends Number> T convert(Class<T> targetType, Number n) {
+    public static <T extends Number> T convert(Class<T> targetType, Number n) {
         if (targetType == null) {
             throw new IllegalArgumentException();
         }
