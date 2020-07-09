@@ -1,8 +1,10 @@
 package com.sogou.bizdev.compass.core.util;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
 
+import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 
@@ -27,6 +29,21 @@ public abstract class JdbcMethodUtils {
         if (method == null) {
             return null;
         }
-        return ReflectionUtils.invokeJdbcMethod(method, target, args);
+        return invokeJdbcMethod(method, target, args);
+    }
+
+    private static Object invokeJdbcMethod(Method method, @Nullable Object target, @Nullable Object... args)
+        throws SQLException {
+        try {
+            return method.invoke(target, args);
+        } catch (IllegalAccessException ex) {
+            ReflectionUtils.handleReflectionException(ex);
+        } catch (InvocationTargetException ex) {
+            if (ex.getTargetException() instanceof SQLException) {
+                throw (SQLException) ex.getTargetException();
+            }
+            ReflectionUtils.handleInvocationTargetException(ex);
+        }
+        throw new IllegalStateException("Should never get here");
     }
 }
