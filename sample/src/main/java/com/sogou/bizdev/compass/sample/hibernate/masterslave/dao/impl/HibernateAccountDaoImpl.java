@@ -2,7 +2,7 @@ package com.sogou.bizdev.compass.sample.hibernate.masterslave.dao.impl;
 
 import java.util.List;
 
-import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 
 import com.sogou.bizdev.compass.sample.common.po.Account;
 import com.sogou.bizdev.compass.sample.hibernate.masterslave.dao.HibernateAccountDao;

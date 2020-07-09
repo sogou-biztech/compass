@@ -37,7 +37,7 @@ public class TableRenameVisitorTest {
         String sql = "insert into cpcplan(id,name) select id,name from cpcplan";
         String newSql = TableRenameUtil.modifyTableNames(sql, this.tableRenamer);
         System.out.println(newSql);
-        Assert.assertEquals(newSql, "INSERT INTO cpcplan" + suffix + "(id,name) SELECT id,name FROM cpcplan" + suffix);
+        Assert.assertEquals(newSql, "INSERT INTO cpcplan" + suffix + " (id, name) SELECT id, name FROM cpcplan" + suffix);
     }
 
     /**
@@ -179,8 +179,8 @@ public class TableRenameVisitorTest {
 
     @Test
     public void testFormat() {
-        String pattern = "_%02S%02S";
-        System.out.println(String.format(pattern, "1", "5"));
+        String pattern = "_%02d%02d";
+        System.out.println(String.format(pattern, 1, 5));
     }
 
 }

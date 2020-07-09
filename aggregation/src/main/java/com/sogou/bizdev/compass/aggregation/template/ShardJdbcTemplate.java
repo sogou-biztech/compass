@@ -424,9 +424,10 @@ public class ShardJdbcTemplate extends ShardJdbcConfig
                 .append("select count(*) from (")
                 .append(interceptedSql)
                 .append(") t");
-            Integer rowCount = jdbcTemplate.queryForInt(countIt.toString(), args);
 
-            return rowCount;
+            Number number = jdbcTemplate.queryForObject(countIt.toString(), args, Integer.class);
+
+            return (number != null ? number.intValue() : 0);
         }
 
         @Override
