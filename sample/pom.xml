@@ -133,7 +133,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate</artifactId>
-			<version>3.2.2.ga</version>
+			<version>3.2.6.ga</version>
 			    <exclusions>
 			      <exclusion>
 			          <groupId>javax.transaction</groupId>
