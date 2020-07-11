@@ -34,13 +34,13 @@ public class AggregationUtil {
      * 通常用于无AggregationDescriptor的查询结果的聚合
      *
      * @param paramList
+     * @param <T>
      * @return
      */
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public static List aggregateObjectList(List<List> paramList) {
-        List resultList = new ArrayList();
+    public static <T> List<T> aggregateObjectList(List<List<T>> paramList) {
+        List<T> resultList = new ArrayList<T>();
 
-        for (List<?> list : paramList) {
+        for (List<T> list : paramList) {
             resultList.addAll(list);
         }
 
