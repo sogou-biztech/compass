@@ -9,9 +9,9 @@ import java.util.Map;
  * @since 1.0.0
  */
 public interface RowAccessor {
-	
-	public Object getFieldValue(String field);
-	
-	public Map<String, Object> toFieldValueMap();
+
+    public Object getFieldValue(String field);
+
+    public Map<String, Object> toFieldValueMap();
 
 }

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sogou.bizdev.compass.delayfree.preprocessor;
 
@@ -13,27 +13,24 @@ import com.sogou.bizdev.compass.core.preprocessor.RouteContext;
  */
 public class DelayFreeRoutingContext extends RouteContext {
 
-	/**
-	 * 反延时标记
-	 */
-	private Object antiDelayKey;
+    /**
+     * 反延时标记
+     */
+    private Object antiDelayKey;
 
-	public DelayFreeRoutingContext(Method method, Object routeKey,
-			boolean masterMode, Object antiDelayKey) {
-		super(method, routeKey, masterMode);
-		this.antiDelayKey = antiDelayKey;
-	}
+    public DelayFreeRoutingContext(Method method, Object routeKey, boolean masterMode, Object antiDelayKey) {
+        super(method, routeKey, masterMode);
+        this.antiDelayKey = antiDelayKey;
+    }
 
-	public Object getAntiDelayKey() {
-		return antiDelayKey;
-	}
+    public Object getAntiDelayKey() {
+        return antiDelayKey;
+    }
 
-	@Override
-	public String toString() {
-		return String.format("DelayFreeRoutingContext [method=%s, routingKey=%s, masterMode=%s, antiDelayKey=%s]",
-				getMethod(), getRouteKey(), isMasterMode(), antiDelayKey);
-	}
-	
-	
+    @Override
+    public String toString() {
+        return String.format("DelayFreeRoutingContext [method=%s, routingKey=%s, masterMode=%s, antiDelayKey=%s]",
+            getMethod(), getRouteKey(), isMasterMode(), antiDelayKey);
+    }
 
 }

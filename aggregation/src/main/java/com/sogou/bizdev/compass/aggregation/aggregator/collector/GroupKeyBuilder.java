@@ -20,11 +20,13 @@ public class GroupKeyBuilder {
     }
 
     public Object buildKey(RowAccessor row) {
-        if (descriptor.needGroupBy()) {		// 需要groupBy的情况
+        if (descriptor.needGroupBy()) {
+            // 需要groupBy的情况
+
             // 使用groupByFields及其values构造一个HashMap作为该row的group key
             // 如果结果集列表中的某两行的groupByFields的values完全相等
             // 那么说明他们在同一个group中，此处会相应地构造出相同的group key
-        	Map<String, Object> key = new HashMap<String, Object>();
+            Map<String, Object> key = new HashMap<String, Object>();
 
             for (String f : descriptor.listGroupByFields()) {
                 Object value = row.getFieldValue(f);
@@ -32,14 +34,14 @@ public class GroupKeyBuilder {
             }
 
             return key;
-        } 
-        else if (descriptor.needAggregation()) {		// 不需要groupBy但是需要聚合的情况
-                // 返回一个固定的key
-                // 意味着结果集列表的所有行在一个group中
-                return String.valueOf("uniqueSingleGroup");
+        } else if (descriptor.needAggregation()) {
+            // 不需要groupBy但是需要聚合的情况
+
+            // 返回一个固定的key
+            // 意味着结果集列表的所有行在一个group中
+            return String.valueOf("uniqueSingleGroup");
         }
-        
-        
+
         throw new IllegalArgumentException("neither needGroupBy nor needAggregation was specified");
     }
 

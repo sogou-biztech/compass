@@ -11,7 +11,6 @@ import com.sogou.bizdev.compass.aggregation.util.ObjectComparator;
  *
  * @author yk
  * @since 1.0.0
- *
  */
 public class OrderByComparator implements Comparator<Map<String, Object>> {
 
@@ -46,7 +45,7 @@ public class OrderByComparator implements Comparator<Map<String, Object>> {
     private int compare(Map<String, Object> o1, Map<String, Object> o2, String field) {
         Object value1 = o1.get(field);
         Object value2 = o2.get(field);
-        
+
         return objectComparator.compare(value1, value2);
     }
 

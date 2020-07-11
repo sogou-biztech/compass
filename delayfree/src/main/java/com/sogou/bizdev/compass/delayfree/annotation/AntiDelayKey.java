@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sogou.bizdev.compass.delayfree.annotation;
 
@@ -9,10 +9,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/** 
+/**
  * @Description: 反延时标识
  * @author zjc
- * @since 1.0.0 
+ * @since 1.0.0
  */
 @Documented
 @Target({ElementType.PARAMETER})

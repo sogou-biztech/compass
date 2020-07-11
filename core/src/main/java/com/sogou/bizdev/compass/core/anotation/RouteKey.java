@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sogou.bizdev.compass.core.anotation;
 

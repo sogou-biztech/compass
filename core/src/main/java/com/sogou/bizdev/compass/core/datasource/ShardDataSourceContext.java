@@ -5,14 +5,13 @@ import java.util.Map;
 
 /**
  * 提供给用户使用的ShardDataSource视图
- * @author cl
  *
+ * @author cl
  */
-public interface ShardDataSourceContext 
-{
-	public List<String> getMasterSlaveDataSourceIds();
+public interface ShardDataSourceContext {
+    public List<String> getMasterSlaveDataSourceIds();
 
-	public Map<String, MasterSlaveDataSource> getIdToMasterSlaveDataSource();
+    public Map<String, MasterSlaveDataSource> getIdToMasterSlaveDataSource();
 
-	public String getShardDataSourceId();
+    public String getShardDataSourceId();
 }

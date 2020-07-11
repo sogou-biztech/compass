@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sogou.bizdev.compass.core.sqlinterceptor;
 
@@ -10,12 +10,9 @@ import com.sogou.bizdev.compass.core.router.TableContext;
  * @author zjc
  * @since 1.0.0
  */
-public class DefaultSqlInterceptor implements SqlInterceptor 
-{
+public class DefaultSqlInterceptor implements SqlInterceptor {
     @Override
-	public String intercept(String sql, TableContext tc)
-	{
-		return sql;
-	}
-
+    public String intercept(String sql, TableContext tc) {
+        return sql;
+    }
 }

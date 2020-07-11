@@ -15,7 +15,8 @@ import com.sogou.bizdev.compass.aggregation.aggregator.AggregationDescriptor;
 public class GroupedRowCollector {
 
     private AggregationDescriptor descriptor;
-    private Map<String, ColumnCollector> collectors;    // key:targetField, value:columnCollectorEntity
+    // key:targetField, value:columnCollectorEntity
+    private Map<String, ColumnCollector> collectors;
 
     private Map<String, Object> firstRow = null;
 
@@ -30,14 +31,14 @@ public class GroupedRowCollector {
             collector.collect(row);
         }
     }
-    
+
     public void merge(GroupedRowCollector group) {
-    	for (String key : collectors.keySet()) {
-    		ColumnCollector baseCollector = collectors.get(key);
-    		ColumnCollector toBeMerged = group.collectors.get(key);
-    		
-    		baseCollector.merge(toBeMerged);
-    	}
+        for (String key : collectors.keySet()) {
+            ColumnCollector baseCollector = collectors.get(key);
+            ColumnCollector toBeMerged = group.collectors.get(key);
+
+            baseCollector.merge(toBeMerged);
+        }
     }
 
     private Map<String, ColumnCollector> getColumnCollectors() {
@@ -69,7 +70,7 @@ public class GroupedRowCollector {
     }
 
     public Map<String, Object> getCollectedValue() {
-    	Map<String, Object> collected = firstRow;
+        Map<String, Object> collected = firstRow;
 
         for (Map.Entry<String, ColumnCollector> entry : collectors.entrySet()) {
             String targetField = entry.getKey();

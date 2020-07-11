@@ -1,6 +1,11 @@
 package com.sogou.bizdev.compass.aggregation.aggregator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 聚合描述器, 提供对SUM、COUNT、AVG、MAX、MIN函数的支持，以及对GROUP BY、ORDER BY和LIMIT操作的支持
@@ -33,8 +38,8 @@ public class AggregationDescriptor {
     private Map<Function, Map<String, String>> aggregationFields = new HashMap<Function, Map<String, String>>();
     private List<String> groupByFields = new ArrayList<String>();
     private LinkedHashMap<String, Boolean> orderByFields = new LinkedHashMap<String, Boolean>();
-    private int[] limitDescriptor = null;	// [0] - offset, [1] - rows
-
+    // [0] - offset, [1] - rows
+    private int[] limitDescriptor = null;
 
     public AggregationDescriptor sum(String field, String targetField) {
         this.add(Function.SUM, field, targetField);
@@ -70,14 +75,14 @@ public class AggregationDescriptor {
         orderByFields.put(field, Boolean.valueOf(isAsc));
         return this;
     }
-    
+
     public AggregationDescriptor limit(int offset, int rows) {
-    	this.limitDescriptor = new int[] { offset, rows };
-    	return this;
+        this.limitDescriptor = new int[]{offset, rows};
+        return this;
     }
-    
+
     public AggregationDescriptor limit(int rows) {
-    	return this.limit(0, rows);
+        return this.limit(0, rows);
     }
 
     public Map<String, String> listAggregationFields(Function function) {
@@ -91,14 +96,15 @@ public class AggregationDescriptor {
     public LinkedHashMap<String, Boolean> listOrderByFields() {
         return orderByFields;
     }
-    
+
     /**
      * [0] - offset,
      * [1] - rows
+     *
      * @return
      */
     public int[] getLimitDescriptor() {
-    	return limitDescriptor;
+        return limitDescriptor;
     }
 
     public boolean needAggregation() {
@@ -112,9 +118,9 @@ public class AggregationDescriptor {
     public boolean needOrderBy() {
         return orderByFields.size() > 0;
     }
-    
+
     public boolean needLimit() {
-    	return limitDescriptor != null;
+        return limitDescriptor != null;
     }
 
     private void add(Function function, String field, String targetField) {

@@ -13,7 +13,7 @@ public class ConcurrencyContext {
     private volatile Throwable ex;
 
     public void setException(Throwable ex) {
-        this.ex = ex;   
+        this.ex = ex;
     }
 
     public Throwable getException() {
@@ -23,11 +23,11 @@ public class ConcurrencyContext {
     public boolean hasException() {
         return ex != null;
     }
-    
+
     public void throwExceptionIfHasAny() throws Throwable {
-    	if (ex != null) {
-    		throw ex;
-    	}
+        if (ex != null) {
+            throw ex;
+        }
     }
 
 }

@@ -12,10 +12,11 @@ import com.sogou.bizdev.compass.aggregation.aggregator.OrderByComparator;
 import com.sogou.bizdev.compass.aggregation.aggregator.collector.GroupListCollector;
 
 public class AggregationUtil {
-	
+
     /**
      * 基于Integer的聚合工具，通常用于update方法后计算总的affectedRows
-     * @param intsList
+     *
+     * @param intList
      * @return
      */
     public static Integer aggregateInteger(List<Integer> intList) {
@@ -27,27 +28,28 @@ public class AggregationUtil {
 
         return Integer.valueOf(result);
     }
-    
+
     /**
      * 基于任意类型的聚合工具，仅仅将多个List的内容合并至一个List中
      * 通常用于无AggregationDescriptor的查询结果的聚合
+     *
      * @param paramList
+     * @param <T>
      * @return
      */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-	public static List aggregateObjectList(List<List> paramList) {
-        List resultList = new ArrayList();
+    public static <T> List<T> aggregateObjectList(List<List<T>> paramList) {
+        List<T> resultList = new ArrayList<T>();
 
-        for (List<?> list : paramList) {
+        for (List<T> list : paramList) {
             resultList.addAll(list);
         }
 
         return resultList;
     }
 
-
     /**
      * 基于int[]的聚合工具，通常用于batchUpdate后计算affectedRows
+     *
      * @param intsList
      * @return
      */
@@ -62,34 +64,35 @@ public class AggregationUtil {
                     throw new IllegalArgumentException();
                 }
                 for (int i = 0; i < ints.length; i++) {
-                   result[i] += ints[i];
+                    result[i] += ints[i];
                 }
             }
 
             return result;
         }
     }
-    
+
     /**
      * 基于GroupListCollector的聚合工具
      * 通常用于针对单表进行聚合查询后对聚合结果进行合并
-     * 
+     *
      * @param groupList
      * @return
      */
     public static List<Map<String, Object>> aggregateGroupList(List<GroupListCollector> groupList) {
-		GroupListCollector baseList = groupList.get(0);
-		
-		for (int i = 1; i < groupList.size(); i++) {
-			GroupListCollector toBeMerged = groupList.get(i);
-			baseList.merge(toBeMerged);
-		}
-		
-		return baseList.getCollectedGroupList();
+        GroupListCollector baseList = groupList.get(0);
+
+        for (int i = 1; i < groupList.size(); i++) {
+            GroupListCollector toBeMerged = groupList.get(i);
+            baseList.merge(toBeMerged);
+        }
+
+        return baseList.getCollectedGroupList();
     }
-    
+
     /**
      * 排序工具，提供基于AggregationDescriptor.listOrderByFields()的排序功能
+     *
      * @param descriptor
      * @param rowList
      */
@@ -98,30 +101,32 @@ public class AggregationUtil {
             Collections.sort(rowList, new OrderByComparator(descriptor.listOrderByFields()));
         }
     }
-    
+
     /**
      * limit工具，提供基于AggregationDescriptor.getLimitDescriptor()的limit功能
+     *
      * @param descriptor
      * @param rowList
      * @return
      */
-    public static List<Map<String, Object>> limitIfNecessary(AggregationDescriptor descriptor, List<Map<String, Object>> rowList) {
-    	List<Map<String, Object>> result = rowList;
+    public static List<Map<String, Object>> limitIfNecessary(AggregationDescriptor descriptor,
+        List<Map<String, Object>> rowList) {
+        List<Map<String, Object>> result = rowList;
 
-    	if (descriptor.needLimit()) {
-    		int size = rowList.size();
-    		int offset = descriptor.getLimitDescriptor()[0];
-    		int rows = descriptor.getLimitDescriptor()[1];
-    		
-    		if (offset >= size) {
-    			result = new ArrayList<Map<String,Object>>();
-    		} else {
-    			int toIndex = Math.min(size, offset + rows);
-    			result = new ArrayList<Map<String,Object>>(rowList.subList(offset, toIndex));
-    		}
-    	} 
+        if (descriptor.needLimit()) {
+            int size = rowList.size();
+            int offset = descriptor.getLimitDescriptor()[0];
+            int rows = descriptor.getLimitDescriptor()[1];
 
-   		return result;
+            if (offset >= size) {
+                result = new ArrayList<Map<String, Object>>();
+            } else {
+                int toIndex = Math.min(size, offset + rows);
+                result = new ArrayList<Map<String, Object>>(rowList.subList(offset, toIndex));
+            }
+        }
+
+        return result;
     }
 
 }

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sogou.bizdev.compass.core.proxyconnection;
 
@@ -15,288 +15,242 @@ import com.sogou.bizdev.compass.core.util.JdbcMethodUtils;
  * @Description: 代理statement，执行sql替换
  * @author zjc
  * @since 1.0.0
- *
  */
-public class ShardDataSourceProxyStatement implements Statement 
-{
+public class ShardDataSourceProxyStatement implements Statement {
 
-	private Statement targetStatement;
-	
-	private ShardDataSourceProxyConnection shardProxyConnection;
-	
-	public ShardDataSourceProxyStatement(Statement statement, ShardDataSourceProxyConnection shardProxyConnection)
-	{
-		this.targetStatement = statement;
-		this.shardProxyConnection=shardProxyConnection;
-	}
+    private Statement targetStatement;
 
-	@Override
-	public <T> T unwrap(Class<T> iface) throws SQLException 
-	{
-		return targetStatement.unwrap(iface);
-	}
+    private ShardDataSourceProxyConnection shardProxyConnection;
 
-	@Override
-	public boolean isWrapperFor(Class<?> iface) throws SQLException 
-	{
-		return targetStatement.isWrapperFor(iface);
-	}
+    public ShardDataSourceProxyStatement(Statement statement, ShardDataSourceProxyConnection shardProxyConnection) {
+        this.targetStatement = statement;
+        this.shardProxyConnection = shardProxyConnection;
+    }
 
-	@Override
-	public ResultSet executeQuery(String sql) throws SQLException 
-	{
-		return targetStatement.executeQuery(this.interceptSql(sql));
-	}
+    @Override
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        return targetStatement.unwrap(iface);
+    }
 
-	@Override
-	public int executeUpdate(String sql) throws SQLException 
-	{
-		return targetStatement.executeUpdate(this.interceptSql(sql));
-	}
+    @Override
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return targetStatement.isWrapperFor(iface);
+    }
 
-	@Override
-	public void close() throws SQLException 
-	{
-		targetStatement.close();
-	}
+    @Override
+    public ResultSet executeQuery(String sql) throws SQLException {
+        return targetStatement.executeQuery(this.interceptSql(sql));
+    }
 
-	@Override
-	public int getMaxFieldSize() throws SQLException 
-	{
-		return targetStatement.getMaxFieldSize();
-	}
+    @Override
+    public int executeUpdate(String sql) throws SQLException {
+        return targetStatement.executeUpdate(this.interceptSql(sql));
+    }
 
-	@Override
-	public void setMaxFieldSize(int max) throws SQLException 
-	{
-		targetStatement.setMaxFieldSize(max);
-	}
+    @Override
+    public void close() throws SQLException {
+        targetStatement.close();
+    }
 
-	@Override
-	public int getMaxRows() throws SQLException
-	{
-		return targetStatement.getMaxRows();
-	}
+    @Override
+    public int getMaxFieldSize() throws SQLException {
+        return targetStatement.getMaxFieldSize();
+    }
 
-	@Override
-	public void setMaxRows(int max) throws SQLException 
-	{
-		targetStatement.setMaxRows(max);
-	}
+    @Override
+    public void setMaxFieldSize(int max) throws SQLException {
+        targetStatement.setMaxFieldSize(max);
+    }
 
-	@Override
-	public void setEscapeProcessing(boolean enable) throws SQLException 
-	{
-		targetStatement.setEscapeProcessing(enable);
-	}
+    @Override
+    public int getMaxRows() throws SQLException {
+        return targetStatement.getMaxRows();
+    }
 
-	@Override
-	public int getQueryTimeout() throws SQLException 
-	{
-		return targetStatement.getQueryTimeout();
-	}
+    @Override
+    public void setMaxRows(int max) throws SQLException {
+        targetStatement.setMaxRows(max);
+    }
 
-	@Override
-	public void setQueryTimeout(int seconds) throws SQLException 
-	{
-		targetStatement.setQueryTimeout(seconds);
-	}
+    @Override
+    public void setEscapeProcessing(boolean enable) throws SQLException {
+        targetStatement.setEscapeProcessing(enable);
+    }
 
-	@Override
-	public void cancel() throws SQLException 
-	{
-		targetStatement.cancel();
-	}
+    @Override
+    public int getQueryTimeout() throws SQLException {
+        return targetStatement.getQueryTimeout();
+    }
 
-	@Override
-	public SQLWarning getWarnings() throws SQLException {
-		return targetStatement.getWarnings();
-	}
+    @Override
+    public void setQueryTimeout(int seconds) throws SQLException {
+        targetStatement.setQueryTimeout(seconds);
+    }
 
-	@Override
-	public void clearWarnings() throws SQLException 
-	{
-		targetStatement.clearWarnings();
-	}
+    @Override
+    public void cancel() throws SQLException {
+        targetStatement.cancel();
+    }
 
-	@Override
-	public void setCursorName(String name) throws SQLException 
-	{
-		targetStatement.setCursorName(name);
-	}
+    @Override
+    public SQLWarning getWarnings() throws SQLException {
+        return targetStatement.getWarnings();
+    }
 
-	@Override
-	public boolean execute(String sql) throws SQLException 
-	{
-		return targetStatement.execute(this.interceptSql(sql));
-	}
+    @Override
+    public void clearWarnings() throws SQLException {
+        targetStatement.clearWarnings();
+    }
 
-	@Override
-	public ResultSet getResultSet() throws SQLException 
-	{
-		return targetStatement.getResultSet();
-	}
+    @Override
+    public void setCursorName(String name) throws SQLException {
+        targetStatement.setCursorName(name);
+    }
 
-	@Override
-	public int getUpdateCount() throws SQLException 
-	{
-		return targetStatement.getUpdateCount();
-	}
+    @Override
+    public boolean execute(String sql) throws SQLException {
+        return targetStatement.execute(this.interceptSql(sql));
+    }
 
-	@Override
-	public boolean getMoreResults() throws SQLException 
-	{
-		return targetStatement.getMoreResults();
-	}
+    @Override
+    public ResultSet getResultSet() throws SQLException {
+        return targetStatement.getResultSet();
+    }
 
-	@Override
-	public void setFetchDirection(int direction) throws SQLException 
-	{
-		targetStatement.setFetchDirection(direction);
-	}
+    @Override
+    public int getUpdateCount() throws SQLException {
+        return targetStatement.getUpdateCount();
+    }
 
-	@Override
-	public int getFetchDirection() throws SQLException 
-	{
-		return targetStatement.getFetchDirection();
-	}
+    @Override
+    public boolean getMoreResults() throws SQLException {
+        return targetStatement.getMoreResults();
+    }
 
-	@Override
-	public void setFetchSize(int rows) throws SQLException 
-	{
-		targetStatement.setFetchSize(rows);
-	}
+    @Override
+    public void setFetchDirection(int direction) throws SQLException {
+        targetStatement.setFetchDirection(direction);
+    }
 
-	@Override
-	public int getFetchSize() throws SQLException 
-	{
-		return targetStatement.getFetchSize();
-	}
+    @Override
+    public int getFetchDirection() throws SQLException {
+        return targetStatement.getFetchDirection();
+    }
 
-	@Override
-	public int getResultSetConcurrency() throws SQLException 
-	{
-		return targetStatement.getResultSetConcurrency();
-	}
+    @Override
+    public void setFetchSize(int rows) throws SQLException {
+        targetStatement.setFetchSize(rows);
+    }
 
-	@Override
-	public int getResultSetType() throws SQLException 
-	{
-		return targetStatement.getResultSetType();
-	}
+    @Override
+    public int getFetchSize() throws SQLException {
+        return targetStatement.getFetchSize();
+    }
 
-	@Override
-	public void addBatch(String sql) throws SQLException 
-	{
-		targetStatement.addBatch(this.interceptSql(sql));
-	}
+    @Override
+    public int getResultSetConcurrency() throws SQLException {
+        return targetStatement.getResultSetConcurrency();
+    }
 
-	@Override
-	public void clearBatch() throws SQLException 
-	{
-		targetStatement.clearBatch();
-	}
+    @Override
+    public int getResultSetType() throws SQLException {
+        return targetStatement.getResultSetType();
+    }
 
-	@Override
-	public int[] executeBatch() throws SQLException 
-	{
-		return targetStatement.executeBatch();
-	}
+    @Override
+    public void addBatch(String sql) throws SQLException {
+        targetStatement.addBatch(this.interceptSql(sql));
+    }
 
-	@Override
-	public Connection getConnection() throws SQLException 
-	{
-		return targetStatement.getConnection();
-	}
+    @Override
+    public void clearBatch() throws SQLException {
+        targetStatement.clearBatch();
+    }
 
-	@Override
-	public boolean getMoreResults(int current) throws SQLException 
-	{
-		return targetStatement.getMoreResults(current);
-	}
+    @Override
+    public int[] executeBatch() throws SQLException {
+        return targetStatement.executeBatch();
+    }
 
-	@Override
-	public ResultSet getGeneratedKeys() throws SQLException 
-	{
-		return targetStatement.getGeneratedKeys();
-	}
+    @Override
+    public Connection getConnection() throws SQLException {
+        return targetStatement.getConnection();
+    }
 
-	@Override
-	public int executeUpdate(String sql, int autoGeneratedKeys) throws SQLException 
-	{
-		return targetStatement.executeUpdate(this.interceptSql(sql), autoGeneratedKeys);
-	}
+    @Override
+    public boolean getMoreResults(int current) throws SQLException {
+        return targetStatement.getMoreResults(current);
+    }
 
-	@Override
-	public int executeUpdate(String sql, int[] columnIndexes) throws SQLException 
-	{
-		return targetStatement.executeUpdate(this.interceptSql(sql), columnIndexes);
-	}
+    @Override
+    public ResultSet getGeneratedKeys() throws SQLException {
+        return targetStatement.getGeneratedKeys();
+    }
 
-	@Override
-	public int executeUpdate(String sql, String[] columnNames) throws SQLException
-	{
-		return targetStatement.executeUpdate(this.interceptSql(sql), columnNames);
-	}
+    @Override
+    public int executeUpdate(String sql, int autoGeneratedKeys) throws SQLException {
+        return targetStatement.executeUpdate(this.interceptSql(sql), autoGeneratedKeys);
+    }
 
-	@Override
-	public boolean execute(String sql, int autoGeneratedKeys) throws SQLException 
-	{
-		return targetStatement.execute(this.interceptSql(sql), autoGeneratedKeys);
-	}
+    @Override
+    public int executeUpdate(String sql, int[] columnIndexes) throws SQLException {
+        return targetStatement.executeUpdate(this.interceptSql(sql), columnIndexes);
+    }
 
-	@Override
-	public boolean execute(String sql, int[] columnIndexes) throws SQLException 
-	{
-		return targetStatement.execute(this.interceptSql(sql), columnIndexes);
-	}
+    @Override
+    public int executeUpdate(String sql, String[] columnNames) throws SQLException {
+        return targetStatement.executeUpdate(this.interceptSql(sql), columnNames);
+    }
 
-	@Override
-	public boolean execute(String sql, String[] columnNames) throws SQLException 
-	{
-		return targetStatement.execute(this.interceptSql(sql), columnNames);
-	}
+    @Override
+    public boolean execute(String sql, int autoGeneratedKeys) throws SQLException {
+        return targetStatement.execute(this.interceptSql(sql), autoGeneratedKeys);
+    }
 
-	@Override
-	public int getResultSetHoldability() throws SQLException 
-	{
-		return targetStatement.getResultSetHoldability();
-	}
+    @Override
+    public boolean execute(String sql, int[] columnIndexes) throws SQLException {
+        return targetStatement.execute(this.interceptSql(sql), columnIndexes);
+    }
 
-	@Override
-	public boolean isClosed() throws SQLException
-	{
-		return targetStatement.isClosed();
-	}
+    @Override
+    public boolean execute(String sql, String[] columnNames) throws SQLException {
+        return targetStatement.execute(this.interceptSql(sql), columnNames);
+    }
 
-	@Override
-	public void setPoolable(boolean poolable) throws SQLException
-	{
-		targetStatement.setPoolable(poolable);
-	}
+    @Override
+    public int getResultSetHoldability() throws SQLException {
+        return targetStatement.getResultSetHoldability();
+    }
 
-	@Override
-	public boolean isPoolable() throws SQLException 
-	{
-		return targetStatement.isPoolable();
-	}
-	
-	protected String interceptSql(String sql)
-	{
-		return this.shardProxyConnection.interceptSql(sql);
-	}
-	
-	//---------------------------------------------------------------------
-	// Implementation of JDBC 4.1's method
-	//---------------------------------------------------------------------
-	//@Override
-	public void closeOnCompletion() throws SQLException 
-	{
-		JdbcMethodUtils.invokeJdbcMethod(Statement.class,"closeOnCompletion",new Class<?>[0],targetStatement,new Object[0]);
-	}
-	//@Override
-	public boolean isCloseOnCompletion() throws SQLException 
-	{
-		return (Boolean)JdbcMethodUtils.invokeJdbcMethod(Statement.class,"isCloseOnCompletion",new Class<?>[0],targetStatement,new Object[0]);
-	}
+    @Override
+    public boolean isClosed() throws SQLException {
+        return targetStatement.isClosed();
+    }
+
+    @Override
+    public void setPoolable(boolean poolable) throws SQLException {
+        targetStatement.setPoolable(poolable);
+    }
+
+    @Override
+    public boolean isPoolable() throws SQLException {
+        return targetStatement.isPoolable();
+    }
+
+    protected String interceptSql(String sql) {
+        return this.shardProxyConnection.interceptSql(sql);
+    }
+
+    //---------------------------------------------------------------------
+    // Implementation of JDBC 4.1's method
+    //---------------------------------------------------------------------
+
+    public void closeOnCompletion() throws SQLException {
+        JdbcMethodUtils.invokeJdbcMethod(Statement.class, "closeOnCompletion", new Class<?>[0], targetStatement, new Object[0]);
+    }
+
+    public boolean isCloseOnCompletion() throws SQLException {
+        return (Boolean) JdbcMethodUtils.invokeJdbcMethod(Statement.class, "isCloseOnCompletion", new Class<?>[0], targetStatement, new Object[0]);
+    }
+
 }
