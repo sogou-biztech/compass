@@ -54,9 +54,10 @@ public interface ShardJdbcOperations {
      * @param sql
      * @param args
      * @param rowMapper
+     * @param <T>
      * @return
      */
-    public List query(String sql, Object[] args, RowMapper rowMapper);
+    public <T> List<T> query(String sql, Object[] args, RowMapper<T> rowMapper);
 
     /**
      * 使用sql与args进行查询
