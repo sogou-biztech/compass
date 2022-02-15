@@ -15,7 +15,7 @@ public class AggregationUtil {
 	
     /**
      * 基于Integer的聚合工具，通常用于update方法后计算总的affectedRows
-     * @param intList
+     * @param intsList
      * @return
      */
     public static Integer aggregateInteger(List<Integer> intList) {
@@ -34,11 +34,11 @@ public class AggregationUtil {
      * @param paramList
      * @return
      */
-    @SuppressWarnings({ "unchecked" })
-	public static <T> List<T> aggregateObjectList(List<List<T>> paramList) {
-        List<T> resultList = new ArrayList<T>();
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public static List aggregateObjectList(List<List> paramList) {
+        List resultList = new ArrayList();
 
-        for (List<T> list : paramList) {
+        for (List<?> list : paramList) {
             resultList.addAll(list);
         }
 
